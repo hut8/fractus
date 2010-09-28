@@ -1,0 +1,8 @@
+package fractus;
+
+option java_package = "us.fract.protobuf";
+
+message Request {
+	
+
+}

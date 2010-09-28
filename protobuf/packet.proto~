@@ -1,0 +1,3 @@
+package fractus;
+
+option java_package = "";
