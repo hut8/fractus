@@ -11,14 +11,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.concurrent.Executor;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -36,15 +42,16 @@ import org.bouncycastle.util.encoders.Base64;
 import us.fract.main.*;
 
 public class EncryptionManager {
+
     private static final String ELLIPTIC_CURVE = "secp521r1";
     private KeyPair keyPair;
     private String encodingType;
     private String encodedKey;
     private ECDHBasicAgreement agreement;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    
-    public EncryptionManager() {    }
-    
+
+    public EncryptionManager() {
+    }
 
     /**
      * Add PropertyChangeListener.
@@ -71,6 +78,7 @@ public class EncryptionManager {
 
     public void initialize(Executor c) {
         c.execute(new Runnable() {
+
             @Override
             public void run() {
                 Provider provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
@@ -118,8 +126,10 @@ public class EncryptionManager {
         ECDomainParameters dp = new ECDomainParameters(spec.getCurve(), spec.getG(), spec.getN(), spec.getH(), spec.getSeed());
         ECPrivateKeyParameters pkp = new ECPrivateKeyParameters(privKey.getD(), dp);
         agreement.init(pkp);
+    }
 
-
+    public byte[] getPublicKey() {
+        return keyPair.getPublic().getEncoded();
     }
 
     public SecretKeySpec deriveKey(CipherParameters cp) {
@@ -169,5 +179,46 @@ public class EncryptionManager {
         ECDomainParameters dp = new ECDomainParameters(spec.getCurve(), spec.getG(), spec.getN(), spec.getH(), spec.getSeed());
         ECPublicKeyParameters pkp = new ECPublicKeyParameters(pubkey.getQ(), dp);
         return deriveKey(pkp);
+    }
+
+    public static byte[] decrypt(byte[] ciphertext, SecretKeySpec sks) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        // Create cipher
+        Cipher inCipher = null;
+        try {
+            inCipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC");
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        inCipher.init(Cipher.DECRYPT_MODE, sks);
+        return inCipher.doFinal(ciphertext);
+    }
+
+    public static byte[] encrypt(byte[] plaintext, SecretKeySpec sks)
+            throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException {
+        Cipher outCipher = null;
+        try {
+            outCipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC");
+        } catch (NoSuchProviderException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.exit(1);
+        }
+        outCipher.init(Cipher.ENCRYPT_MODE, sks);
+
+
+        // 	Encrypt with symmetric key
+        byte[] cipherData = null;
+        try {
+            cipherData = outCipher.doFinal(plaintext);
+        } catch (IllegalBlockSizeException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return cipherData;
     }
 }

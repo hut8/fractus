@@ -62,10 +62,6 @@ public class LocationManager {
 				packetHandler, publicKeyDirectory);
 			Logger.getAnonymousLogger().log(Level.INFO,"location manager: addConnection: connection added at " + connection.toString());
 			connection.start();
-			connection.sendMessage(
-                                getSignOnMessage(
-                                encryptionManager.getEncodedKey()
-                                ));
 			connections.add(connection);
 		} catch(Exception e) {
 			log.warning("location invalid: "+address+":"+port);
@@ -73,16 +69,7 @@ public class LocationManager {
 
 	}
 
-	public static FractusMessage getSignOnMessage(String encodedKey) throws ParserConfigurationException {
-		FractusMessage m = new FractusMessage();
-		Element el = m.getDocumentElement();
-		Element newElement = m.getDocument().createElement("sign-on");
-		newElement.setAttribute("key", encodedKey);
-		el.appendChild(newElement);
-		return m;
-	}
-
-	public void sendMessage(FractusMessage m) {
+	public void sendPacket(FractusPacket m) {
 		Logger.getAnonymousLogger().log(Level.INFO,"LocationManager: sending XML document...");
 		Iterator<ClientConnector> cItr = connections.iterator();
 		while (cItr.hasNext()) {

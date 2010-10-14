@@ -11,8 +11,7 @@ import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -21,6 +20,8 @@ import org.w3c.dom.Element;
 import us.fract.connection.EncryptionManager;
 import us.fract.connection.PacketHandler;
 import us.fract.main.*;
+
+import org.apache.log4j.*;
 
 public class ServerConnection
         implements Runnable {
@@ -33,7 +34,7 @@ public class ServerConnection
     private HashMap<String, Callback> callbacks;
     private PacketHandler packetHandler;
     private UserCredentials uc;
-    private final ConcurrentLinkedQueue<FractusMessage> queue;
+    private final ConcurrentLinkedQueue<FractusPacket> queue;
     private Delegate<DelegateMethod<EventData>, EventData> signOnDelegate;
     private String hostname;
 
@@ -59,7 +60,7 @@ public class ServerConnection
         sockMutex = new Object();
         packetHandler = new PacketHandler(callbacks, null);
         log = Logger.getLogger(this.getClass().getName());
-        queue = new ConcurrentLinkedQueue<FractusMessage>();
+        queue = new ConcurrentLinkedQueue<FractusPacket>();
         signOnDelegate = new Delegate<DelegateMethod<EventData>, EventData>();
     }
 
@@ -67,8 +68,8 @@ public class ServerConnection
         return signOnDelegate;
     }
 
-    public void process(final FractusMessage message) {
-        log.info("Adding message for processing on queue");
+    public void process(final FractusPacket message) {
+        log.debug("Adding packet to queue");
         queue.add(message);
         synchronized (queue) {
             queue.notifyAll();
@@ -79,18 +80,18 @@ public class ServerConnection
         this.exceptionHandler = exceptionHandler;
     }
 
-    private String syncProcess(final FractusMessage message)
+    private String syncProcess(final FractusPacket message)
             throws IOException,
             ProtocolException,
             NumberFormatException,
             GeneralSecurityException {
         // Create actual connection with streams
-        Logger.getAnonymousLogger().log(Level.INFO, "Connecting to server at " + address);
+        log.info("Connecting to server at " + address);
         Socket s = new Socket();
         s.connect(address);
         InputStream input = s.getInputStream();
         OutputStream output = s.getOutputStream();
-        Logger.getAnonymousLogger().log(Level.INFO, "Connected successfully");
+        log.info("Connected successfully");
 
         Logger.getAnonymousLogger().log(Level.INFO, "Negotiating headers with " + address);
         // Transfer headers

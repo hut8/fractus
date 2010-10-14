@@ -236,23 +236,9 @@ implements Runnable {
                                         new ClientConnector(clientSocket,
 						encryptionManager,
                                                 packetHandler);
-				newconnection.initConnection();
-				newconnection.sendMessage(
-                                        LocationManager.getSignOnMessage(
-                                        encryptionManager.getEncodedKey()
-                                        ));
 				newconnection.start();
 			} catch (IOException e) {
 				Logger.getAnonymousLogger().log(Level.INFO,"Client AcceptConnection failed");
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		//serverSocket.close();

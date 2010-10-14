@@ -143,7 +143,6 @@ public class Fractus
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Throwable t) {
             System.err.println("Unable to set UI - reverting to fugly interface.");
-            t.printStackTrace();
         }
         Fractus fractus = new Fractus();
         fractus.promptForCredentials();

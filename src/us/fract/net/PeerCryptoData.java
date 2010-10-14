@@ -28,31 +28,19 @@ public class PeerCryptoData {
 		return sks;
 	}
 	
-	public static PeerCryptoData negotiate(Headers headerParams, EncryptionManager em)
+	public static PeerCryptoData negotiate(String keyEncoding, byte[] remotePublicKey, EncryptionManager em)
 	throws NoSuchAlgorithmException,
 	NoSuchProviderException,
 	InvalidKeySpecException {
 		PeerCryptoData pcd = new PeerCryptoData();
 
-		if (headerParams.get("key-encoding") == null ||
-				!headerParams.get("key-encoding").equals("X.509")) {
+		if (keyEncoding == null || !keyEncoding.equals("X.509")) {
 			log("error: could not recognize that key encoding.");
 			return null;
 		}
 		
-		pcd.encodedKey = headerParams.get("key");
-		if (pcd.encodedKey == null) {
-			log("error: did not receive foreign public key.");
-			return null;
-		}		
-		
-		
-		log("trying to derive secret key from ours and " + pcd.encodedKey);
-		// Get the byte[] decoded key
-		byte[] keyBytes = Base64.decode(pcd.encodedKey);
-		
 		// Create their public key object for ECDH
-		KeySpec ks = new X509EncodedKeySpec(keyBytes);
+		KeySpec ks = new X509EncodedKeySpec(remotePublicKey);
 		ECPublicKey pubkey;
 			KeyFactory kf = KeyFactory.getInstance("ECDH", "BC");
 			pubkey = (ECPublicKey) kf.generatePublic(ks);
