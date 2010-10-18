@@ -8,13 +8,13 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.concurrent.*;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 import javax.swing.UIManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.log4j.Logger;
 
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -36,7 +36,10 @@ public class Fractus
         implements
         FractusController,
         ExceptionHandler {
-    private Logger log;
+    private static Logger log;
+    static {
+        log = Logger.getLogger(Fractus.class.getName());
+    }
     private EncryptionManager encryptionManager;
     private PacketHandler packetHandler;
     private PublicKeyDirectory publicKeyDirectory;
@@ -57,7 +60,7 @@ public class Fractus
             IOException,
             GeneralSecurityException,
             ParserConfigurationException {
-        log = Logger.getLogger(this.getClass().getName());
+        
         log.info("Fractus Client");
 
         UncaughtExceptionHandler uncaughtExceptionHandler = new UncaughtExceptionHandler() {
@@ -140,15 +143,18 @@ public class Fractus
             GeneralSecurityException,
             ParserConfigurationException {
         try {
+            log.debug("Trying to set Look and Feel to native...");
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            log.debug("Success");
         } catch (Throwable t) {
-            System.err.println("Unable to set UI - reverting to fugly interface.");
+            log.warn("Unable to set UI - reverting to fugly interface.");
         }
         Fractus fractus = new Fractus();
         fractus.promptForCredentials();
     }
 
     private void promptForCredentials() {
+        log.debug("Prompting for credentials...");
         CredentialsFrame cf = CredentialsFrame.getInstance();
         cf.setFractus(this);
         cf.pack();

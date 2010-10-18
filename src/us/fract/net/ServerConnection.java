@@ -22,19 +22,17 @@ import us.fract.connection.PacketHandler;
 import us.fract.main.*;
 
 import org.apache.log4j.*;
+import us.fract.connection.ClientConnector;
 
 public class ServerConnection
         implements Runnable {
-
-    private Logger log;
+    private static Logger log;
+    private ClientConnector connector;
     private ExceptionHandler exceptionHandler;
     private InetSocketAddress address;
     private EncryptionManager em;
     private Object sockMutex;
-    private HashMap<String, Callback> callbacks;
-    private PacketHandler packetHandler;
     private UserCredentials uc;
-    private final ConcurrentLinkedQueue<FractusPacket> queue;
     private Delegate<DelegateMethod<EventData>, EventData> signOnDelegate;
     private String hostname;
 
