@@ -86,6 +86,7 @@ public class ServerConnection
         ProtocolBuffer.RegisterLocationReq registerLocationReq = ProtocolBuffer
                 .RegisterLocationReq
                 .newBuilder()
+                .addLocationList(ProtocolBuffer.Location.newBuilder().build())
                 .build();
         FractusMessage registerLocationMessage = FractusMessage.build(registerLocationReq);
 
@@ -126,7 +127,8 @@ public class ServerConnection
 
     @Override
     public void run() {
-        log.info("Server Connection thread alive");
+        log.debug("Server Connection thread alive");
+        log.debug("Resolving hostname of server: " + hostname);
         // First resolve hostname
         try {
             address = new InetSocketAddress(InetAddress.getByName(hostname), port);
@@ -138,7 +140,8 @@ public class ServerConnection
             return;
         }
 
+        
 
-        log.info("Connection thread finished");
+        log.debug("Connection thread finished");
     }
 }

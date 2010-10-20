@@ -1,0 +1,43 @@
+
+option java_package = "us.fract.protobuf";
+
+message InstantMessage {
+    required string contents = 1;
+}
+
+message PublicKey {
+    required string encoding = 1;
+    required bytes public_key = 2;
+}
+
+message ClientInfo {
+    optional string version = 1;
+    optional string location = 2;
+}
+
+message RegisterKeyReq {
+    required string username = 1;
+    required string password = 2;
+}
+
+message RegisterKeyRes {
+    
+}
+
+message IdentifyKeyReq {
+
+}
+
+message Location {
+    optional string address = 1;
+    optional int32 port = 2;
+}
+
+message RegisterLocationReq {
+    repeated Location location_list = 1;
+}
+
+message RegisterLocationRes {
+
+}
+
