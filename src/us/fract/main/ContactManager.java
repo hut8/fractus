@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import us.fract.connection.ClientConnector;
+import us.fract.connection.FractusConnector;
 import us.fract.connection.EncryptionManager;
 import us.fract.connection.PacketHandler;
 import us.fract.net.Callback;
@@ -148,7 +148,7 @@ public class ContactManager {
 		
 	public class ContactDataCallback implements Callback {
 		@Override
-		public void dispatch(String sender, Element message, ClientConnector fc)
+		public void dispatch(String sender, Element message, FractusConnector fc)
 		throws NumberFormatException, IOException,
 		NoSuchAlgorithmException, NoSuchPaddingException {
 			setValid(true);

@@ -4,7 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import us.fract.connection.ClientConnector;
+import us.fract.connection.FractusConnector;
 import us.fract.main.Contact;
 import us.fract.main.ContactManager;
 import us.fract.main.Fractus;
@@ -25,7 +25,7 @@ public class CallbackFactory {
 		/* message */
 		registerCallback(map, "message", new Callback() {
 			@Override
-			public void dispatch(String sender, Element message, ClientConnector cc) {
+			public void dispatch(String sender, Element message, FractusConnector cc) {
 				if (sender == null) {
 					Logger.getAnonymousLogger().log(Level.INFO,"SmartCallback: message: received message from unknown sender");
 					return;
@@ -42,7 +42,7 @@ public class CallbackFactory {
 		/* sign-on */
 		registerCallback(map, "sign-on", new Callback() {
 			@Override
-			public void dispatch(String username, Element message, ClientConnector cc) {
+			public void dispatch(String username, Element message, FractusConnector cc) {
 				if (username == null) {
 					Logger.getAnonymousLogger().log(Level.INFO,"SmartCallback: sign-on: a user signed on, but could not be identified");
 					return;
@@ -56,7 +56,7 @@ public class CallbackFactory {
 
 		/* start-proxy */
 		registerCallback(map, "start-proxy", new Callback() {
-			public void dispatch(String username, Element message, ClientConnector cc) {
+			public void dispatch(String username, Element message, FractusConnector cc) {
 				if (username == null) {
 					Logger.getAnonymousLogger().log(Level.INFO,"SmartCallback: start-proxy: a user signed on, but could not be identified");
 					return;
@@ -70,7 +70,7 @@ public class CallbackFactory {
 		HashMap<String,Callback> map = new HashMap<String,Callback>();
 		registerCallback(map, "register-key-response", new Callback() {
 			@Override
-			public void dispatch(String sender, Element message, ClientConnector cc) {
+			public void dispatch(String sender, Element message, FractusConnector cc) {
 				
 			}
 
@@ -78,13 +78,13 @@ public class CallbackFactory {
 		registerCallback(map, "contact-data", tracker.getContactDataCallback());
 		registerCallback(map, "register-location-response", new Callback() {
 			@Override
-			public void dispatch(String sender, Element message, ClientConnector cc) {
+			public void dispatch(String sender, Element message, FractusConnector cc) {
 				
 			}
 		});
 		registerCallback(map, "identify-key-response", new Callback() {
 			@Override
-			public void dispatch(String sender, Element message, ClientConnector cc) {
+			public void dispatch(String sender, Element message, FractusConnector cc) {
 		
 			}
 		});

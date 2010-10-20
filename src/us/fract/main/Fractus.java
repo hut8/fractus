@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -36,7 +37,9 @@ public class Fractus
         implements
         FractusController,
         ExceptionHandler {
+
     private static Logger log;
+
     static {
         log = Logger.getLogger(Fractus.class.getName());
     }
@@ -60,10 +63,11 @@ public class Fractus
             IOException,
             GeneralSecurityException,
             ParserConfigurationException {
-        
+
         log.info("Fractus Client");
 
         UncaughtExceptionHandler uncaughtExceptionHandler = new UncaughtExceptionHandler() {
+
             @Override
             public void uncaughtException(Thread t, Throwable e) {
                 JOptionPane.showMessageDialog(viewManager.getMainFrame(),
@@ -74,14 +78,19 @@ public class Fractus
         Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
 
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
-
         executor = Executors.newFixedThreadPool(5);
+        log.debug("Creating Encryption Manager");
         encryptionManager = new EncryptionManager();
         encryptionManager.initialize(executor);
-        contactManager = new ContactManager(encryptionManager, packetHandler, publicKeyDirectory);
-        routeManager = new RouteManager(encryptionManager, packetHandler);
-        new Thread(routeManager).start();
 
+        log.debug("Creating Contact Manager");
+        contactManager = new ContactManager(encryptionManager, packetHandler, publicKeyDirectory);
+
+        log.debug("Creating Route Manager");
+        routeManager = new RouteManager(encryptionManager, packetHandler);
+
+
+        log.debug("Creating View Manager");
         viewManager = new ViewManager(this);
     }
 
@@ -89,11 +98,9 @@ public class Fractus
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-
     public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
-    
 
     public PacketHandler getPacketHandler() {
         return packetHandler;
@@ -112,23 +119,6 @@ public class Fractus
     }
 
     /**
-     * Basic document object
-     * @return A blank document
-     */
-    public static Document getDocument() {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
-        try {
-            builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e1) {
-            e1.printStackTrace();
-            return null;
-        }
-        DOMImplementation impl = builder.getDOMImplementation();
-        return impl.createDocument(null, "fractus", null);
-    }
-
-    /**
      * @param args
      * @throws IOException s
      * @throws UnknownHostException
@@ -142,6 +132,8 @@ public class Fractus
             IOException,
             GeneralSecurityException,
             ParserConfigurationException {
+        PropertyConfigurator.configure("lib/log4j.properties");
+
         try {
             log.debug("Trying to set Look and Feel to native...");
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -149,7 +141,11 @@ public class Fractus
         } catch (Throwable t) {
             log.warn("Unable to set UI - reverting to fugly interface.");
         }
+        log.debug("Creating Fractus object");
         Fractus fractus = new Fractus();
+        log.debug("Finished Fractus Constructor");
+        Thread routeThread = new Thread(fractus.routeManager);
+        routeThread.start();
         fractus.promptForCredentials();
     }
 
@@ -172,19 +168,18 @@ public class Fractus
             Integer port,
             String username,
             String password) {
-            CredentialsFrame.getInstance().setVisible(false);
+        CredentialsFrame.getInstance().setVisible(false);
         setCredentials(new UserCredentials(username, password));
 
-        sc = new ServerConnection(
-                userCredentials, serverAddress, port,
+        sc = new ServerConnection(userCredentials, serverAddress, port,
                 CallbackFactory.getServerCallbackMap(contactManager), encryptionManager);
 
         sc.setExceptionHandler(this);
         new Thread(sc, "ServerConnection").start();
         routeManager.setServerConnector(sc);
         publicKeyDirectory = new PublicKeyDirectory(sc);
-        packetHandler = new PacketHandler(CallbackFactory.getClientCallbackMap(contactManager), publicKeyDirectory);
-        
+        packetHandler = new PacketHandler();
+
         ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), sc);
         Runtime.getRuntime().addShutdownHook(sh);
     }

@@ -40,11 +40,11 @@ public class ContactListPanel extends javax.swing.JPanel {
         removeContactButton = new javax.swing.JButton();
         addContactButton = new javax.swing.JButton();
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fractus/res/application-exit.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/application-exit.png"))); // NOI18N
 
-        removeContactButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fractus/res/list-remove.png"))); // NOI18N
+        removeContactButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/list-remove.png"))); // NOI18N
 
-        addContactButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fractus/res/list-add.png"))); // NOI18N
+        addContactButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/list-add.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -56,7 +56,7 @@ public class ContactListPanel extends javax.swing.JPanel {
                     .addComponent(contactListScroll, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 263, Short.MAX_VALUE)
                         .addComponent(removeContactButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addContactButton)))
@@ -66,7 +66,7 @@ public class ContactListPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(contactListScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addComponent(contactListScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton1)

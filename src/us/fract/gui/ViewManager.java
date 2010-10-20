@@ -5,6 +5,7 @@
 package us.fract.gui;
 
 import java.io.IOException;
+import org.apache.log4j.Logger;
 import us.fract.main.ContactManager;
 import us.fract.main.DelegateMethod;
 import us.fract.main.EventData;
@@ -15,15 +16,21 @@ import us.fract.main.Fractus;
  * @author bowenl2
  */
 public class ViewManager {
-
     private final Fractus fractus;
     private MainFrame mainFrame;
     private OverviewPanel overviewPanel;
     private ContactListPanel contactListPanel;
     private DelegateMethod<EventData> contactDataDelegate;
 
+    private static Logger log;
+    static {
+        log = Logger.getLogger(ViewManager.class.getName());
+    }
+
     public ViewManager(Fractus fractus) throws IOException {
         this.fractus = fractus;
+
+        log.debug("View Manager Constructor");
 
         contactDataDelegate = new DelegateMethod<EventData>() {
 
@@ -34,10 +41,13 @@ public class ViewManager {
             }
         };
 
-
+        log.debug("Making Main Frame");
         mainFrame = new MainFrame();
+        log.debug("Making Overview Panel");
         overviewPanel = new OverviewPanel(fractus);
+        log.debug("Making Contact List Panel");
         contactListPanel = new ContactListPanel(fractus);
+
 
         fractus.getContactManager().getIsValidDelegate().addTarget(contactDataDelegate);
 
@@ -45,6 +55,7 @@ public class ViewManager {
                 ? contactListPanel : overviewPanel);
 
         mainFrame.setVisible(true);
+        log.debug("Done View Manager Constructor");
     }
 
     public OverviewPanel getOverviewPanel() {

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import org.w3c.dom.*;
 
-import us.fract.connection.ClientConnector;
+import us.fract.connection.FractusConnector;
 
 import javax.xml.parsers.*;
 import us.fract.connection.EncryptionManager;
@@ -42,7 +42,7 @@ public class RouteManager
     private final Object serverConnectionMutex;
 
     private NetListener netListener;
-    private HashSet<ClientConnector> proxies;
+    private HashSet<FractusConnector> proxies;
     private ServerConnection serverConnector;
     private EncryptionManager encryptionManager;
     private PacketHandler packetHandler;
@@ -56,7 +56,7 @@ public class RouteManager
         this.encryptionManager = encryptionManager;
         this.packetHandler = packetHandler;
         established = false;
-        proxies = new HashSet<ClientConnector>();
+        proxies = new HashSet<FractusConnector>();
     }
 
     public void setServerConnector(ServerConnection serverConnector) {

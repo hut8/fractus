@@ -14,7 +14,7 @@ import java.util.Random;
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.UPNPResponseException;
 
-import us.fract.connection.ClientConnector;
+import us.fract.connection.FractusConnector;
 import us.fract.main.Fractus;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -232,17 +232,14 @@ implements Runnable {
 			try {
 				clientSocket = serverSocket.accept();
 				Logger.getAnonymousLogger().log(Level.INFO,"After accept");
-				ClientConnector newconnection =
-                                        new ClientConnector(clientSocket,
-						encryptionManager,
-                                                packetHandler);
-				newconnection.start();
+				FractusConnector newconnection =
+                                        new FractusConnector(clientSocket,
+						encryptionManager);
+				new Thread(newconnection).start();
 			} catch (IOException e) {
 				Logger.getAnonymousLogger().log(Level.INFO,"Client AcceptConnection failed");
 			}
 		}
-		//serverSocket.close();
-		//System.exit(-1);
 	}
 
 	public String getUpnpLoc()  {
