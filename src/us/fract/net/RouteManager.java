@@ -2,17 +2,13 @@ package us.fract.net;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.net.SocketException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.w3c.dom.*;
 
 import us.fract.connection.FractusConnector;
 
 import javax.xml.parsers.*;
+import org.apache.log4j.Logger;
 import us.fract.connection.EncryptionManager;
 import us.fract.connection.PacketHandler;
 
@@ -48,7 +44,10 @@ public class RouteManager
     private PacketHandler packetHandler;
     private String address;
     private int port;
-    private static Logger logger = Logger.getLogger(RouteManager.class.getName());
+    private static Logger log;
+    static {
+        Logger.getLogger(RouteManager.class.getName());
+    }
 
     public RouteManager(EncryptionManager encryptionManager,
             PacketHandler packetHandler) {
@@ -79,13 +78,13 @@ public class RouteManager
      * requests proxies and stores them if necessary
      */
     public boolean findRouteToSelf() {
-        Logger.getAnonymousLogger().log(Level.INFO, "RouteManager: creating NetListener");
+        log.debug("Finding route to self");
         /* create NetListener */
         netListener = new NetListener(encryptionManager, packetHandler);
         /* make NetListener attempt to accept connections
          * (if necessary, negotiating UPnP) */
         if (netListener.establishIncomingRoute()) {
-            Logger.getAnonymousLogger().log(Level.INFO, "RouteManager: established direct incoming route.  Starting listen thread...");
+            log.debug("RouteManager: established direct incoming route.  Starting listen thread...");
             address = netListener.getIP();
             port = netListener.getPort();
             setEstablished(true);
@@ -119,13 +118,13 @@ public class RouteManager
         // Wait for route to be found
         synchronized (serverConnectionMutex) {
             while (serverConnector == null) {
-                logger.info("No server connection data.  Waiting...");
+                log.info("No server connection data.  Waiting...");
                 try {
                     serverConnectionMutex.wait();
                 } catch (InterruptedException ex) { }
-                logger.info("Awoken.  Checking for server connection.");
+                log.info("Awoken.  Checking for server connection.");
             }
-            logger.info("Server Connection Received.");
+            log.info("Server Connection Received.");
         }
 
         try {
@@ -134,7 +133,6 @@ public class RouteManager
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        Logger.getAnonymousLogger().log(Level.INFO, "Bootstrapping...");
 //		while(true) {
 //			Logger.getAnonymousLogger().log(Level.INFO,"RouteManager: updating location...");
 //				try {

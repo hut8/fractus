@@ -1,24 +1,17 @@
 package us.fract.net;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidKeyException;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Element;
 
 import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
 import us.fract.main.*;
 
 import org.apache.log4j.*;
