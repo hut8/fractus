@@ -1,42 +1,33 @@
 package us.fract.main;
 
 import java.io.IOException;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.concurrent.*;
-import javax.swing.JOptionPane;
 
 import javax.swing.UIManager;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
 
 import us.fract.connection.EncryptionManager;
 import us.fract.connection.PacketHandler;
-import us.fract.gui.ContactListPanel;
 import us.fract.gui.CredentialsFrame;
-import us.fract.gui.MainFrame;
-import us.fract.gui.OverviewPanel;
 import us.fract.gui.ViewManager;
-import us.fract.net.CallbackFactory;
+import us.fract.net.KeyPublisher;
 import us.fract.net.PublicKeyDirectory;
 import us.fract.net.RouteManager;
+import us.fract.net.RoutePublisher;
 import us.fract.net.ServerConnection;
 import us.fract.net.UserCredentials;
 
 public class Fractus
         implements
-        FractusController,
-        ExceptionHandler {
+        FractusController {
 
     private static Logger log;
 
@@ -52,6 +43,8 @@ public class Fractus
     private UserCredentials userCredentials;
     private ViewManager viewManager;
     private java.beans.PropertyChangeSupport propertyChangeSupport;
+    private KeyPublisher keyPublisher;
+    private RoutePublisher routePublisher;
 
     public ContactManager getContactManager() {
         return contactManager;
@@ -65,18 +58,6 @@ public class Fractus
             ParserConfigurationException {
 
         log.info("Fractus Client");
-
-        UncaughtExceptionHandler uncaughtExceptionHandler = new UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                JOptionPane.showMessageDialog(viewManager.getMainFrame(),
-                        t.getName() + ":" + e.getLocalizedMessage());
-            }
-        };
-
-        Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
-
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
         executor = Executors.newFixedThreadPool(5);
         log.debug("Creating Encryption Manager");
@@ -88,7 +69,6 @@ public class Fractus
 
         log.debug("Creating Route Manager");
         routeManager = new RouteManager(encryptionManager, packetHandler);
-
 
         log.debug("Creating View Manager");
         viewManager = new ViewManager(this);
@@ -163,23 +143,28 @@ public class Fractus
         Runtime.getRuntime().exit(0);
     }
 
+    
+
+    /**
+     * Set credentials and server location
+     * @param serverAddress
+     * @param port
+     * @param username
+     * @param password
+     */
     @Override
     public void initialize(String serverAddress,
             Integer port,
             String username,
             String password) {
-        CredentialsFrame.getInstance().setVisible(false);
+        log.debug("Setting new credentials");
         setCredentials(new UserCredentials(username, password));
-
-        sc = new ServerConnection(userCredentials, serverAddress, port,
-                CallbackFactory.getServerCallbackMap(contactManager), encryptionManager);
-
-        sc.setExceptionHandler(this);
-        new Thread(sc, "ServerConnection").start();
-        routeManager.setServerConnector(sc);
+        log.debug("Creating server connector");
+        sc = new ServerConnection(userCredentials, serverAddress, port, encryptionManager);
+        new Thread(sc, "Server Connection").start();
+        keyPublisher = new KeyPublisher();
         publicKeyDirectory = new PublicKeyDirectory(sc);
         packetHandler = new PacketHandler();
-
         ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), sc);
         Runtime.getRuntime().addShutdownHook(sh);
     }
@@ -189,15 +174,5 @@ public class Fractus
         this.userCredentials = userCredentials;
         propertyChangeSupport.firePropertyChange("userCredentials",
                 oldUc, userCredentials);
-    }
-
-    @Override
-    public void handle(Object source, Exception e) {
-        if (source.getClass().equals(ServerConnection.class)) {
-            final ServerConnection sc = (ServerConnection) source;
-            JOptionPane.showMessageDialog(viewManager.getMainFrame(), e.getLocalizedMessage());
-            // TODO: Warning dialog
-
-        }
     }
 }

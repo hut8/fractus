@@ -39,7 +39,6 @@ import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.util.encoders.Base64;
 
-import us.fract.main.*;
 
 public class EncryptionManager {
 
@@ -96,7 +95,6 @@ public class EncryptionManager {
                 }
             }
         });
-
     }
 
     public EncryptionManager(String keyfile)

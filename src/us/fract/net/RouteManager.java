@@ -2,12 +2,9 @@ package us.fract.net;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
 
 
-import us.fract.connection.FractusConnector;
 
-import javax.xml.parsers.*;
 import org.apache.log4j.Logger;
 import us.fract.connection.EncryptionManager;
 import us.fract.connection.PacketHandler;
@@ -35,43 +32,21 @@ public class RouteManager
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    private final Object serverConnectionMutex;
-
     private NetListener netListener;
-    private HashSet<FractusConnector> proxies;
-    private ServerConnection serverConnector;
     private EncryptionManager encryptionManager;
     private PacketHandler packetHandler;
     private String address;
     private int port;
     private static Logger log;
     static {
-        Logger.getLogger(RouteManager.class.getName());
+        log = Logger.getLogger(RouteManager.class.getName());
     }
 
     public RouteManager(EncryptionManager encryptionManager,
             PacketHandler packetHandler) {
-        serverConnectionMutex = new Object();
         this.encryptionManager = encryptionManager;
         this.packetHandler = packetHandler;
         established = false;
-        proxies = new HashSet<FractusConnector>();
-    }
-
-    public void setServerConnector(ServerConnection serverConnector) {
-        this.serverConnector = serverConnector;
-        synchronized(serverConnectionMutex) {
-            this.serverConnectionMutex.notifyAll();
-        }
-    }
-    
-
-    private void requestProxy() {
-
-    }
-
-    private void addProxy() {
-        
     }
 
     /** finds a route to this specific node
@@ -110,41 +85,13 @@ public class RouteManager
         return netListener.getUpnpPort();
     }
 
+    @Override
     public void run() {
         //start netlistener
-        new Thread(netListener).start();
+        new Thread(netListener, "Network Listener").start();
+        log.debug("Finding route to self");
         findRouteToSelf();
-
-        // Wait for route to be found
-        synchronized (serverConnectionMutex) {
-            while (serverConnector == null) {
-                log.info("No server connection data.  Waiting...");
-                try {
-                    serverConnectionMutex.wait();
-                } catch (InterruptedException ex) { }
-                log.info("Awoken.  Checking for server connection.");
-            }
-            log.info("Server Connection Received.");
-        }
-
-        try {
-            serverConnector.signOn(this);
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-//		while(true) {
-//			Logger.getAnonymousLogger().log(Level.INFO,"RouteManager: updating location...");
-//				try {
-//					//registerLocation();
-//					Thread.sleep(870000);
-//				}
-//				catch (InterruptedException e) { return; }
-//				catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		}
+        log.debug("Done finding route to self");
     }
 
     public NetListener getNetListener() {
