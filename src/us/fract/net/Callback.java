@@ -8,7 +8,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
 
-import us.fract.connection.FractusConnector;
 
 public interface Callback {
     void dispatch(String sender, Element message, FractusConnector fc) throws NumberFormatException, IOException, NoSuchAlgorithmException, NoSuchPaddingException;

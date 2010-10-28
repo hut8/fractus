@@ -3,38 +3,43 @@ package us.fract.net;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import us.fract.connection.EncryptionManager;
 import us.fract.main.*;
 
 import org.apache.log4j.*;
-import us.fract.connection.FractusConnector;
 import us.fract.protobuf.ProtocolBuffer;
 
 public class ServerConnection
         implements Runnable {
+
     private FractusConnector connector;
     private ExceptionHandler exceptionHandler;
     private EncryptionManager em;
-    private ConcurrentLinkedQueue<FractusMessage> sendQueue;
+    private final ConcurrentLinkedQueue<FractusMessage> messsageQueue;
     private Object sockMutex;
     private UserCredentials uc;
     private Delegate<DelegateMethod<EventData>, EventData> signOnDelegate;
     private InetSocketAddress address;
     private String hostname;
+
     public String getHostname() {
         return hostname;
     }
     private Integer port;
+
     public Integer getPort() {
         return port;
     }
     private static Logger log;
+
     static {
         log = Logger.getLogger(ServerConnection.class.getName());
     }
@@ -47,9 +52,16 @@ public class ServerConnection
         this.hostname = hostname;
         this.port = port;
         this.em = em;
-        sendQueue = new ConcurrentLinkedQueue<FractusMessage>();
+        messsageQueue = new ConcurrentLinkedQueue<FractusMessage>();
         sockMutex = new Object();
         signOnDelegate = new Delegate<DelegateMethod<EventData>, EventData>();
+    }
+
+    public void sendMessage(FractusMessage fractusMessage) {
+        messsageQueue.add(fractusMessage);
+        synchronized(messsageQueue) {
+            messsageQueue.notifyAll();
+        }
     }
 
     public Delegate<DelegateMethod<EventData>, EventData> getSignOnDelegate() {
@@ -58,24 +70,6 @@ public class ServerConnection
 
     public void setExceptionHandler(ExceptionHandler exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
-    }
-
-    public void registerKey(byte[] key) {
-        log.debug("Constructing Register Key Request");
-        ProtocolBuffer.RegisterKeyReq registerKeyReq =
-                ProtocolBuffer.RegisterKeyReq
-                .newBuilder()
-                .setUsername(uc.getUsername())
-                .setPassword(uc.getPassword())
-                .build();
-        FractusMessage registerKeyMessage =
-                FractusMessage
-                .build(registerKeyReq);
-
-    }
-
-    public void registerLocation(RouteManager routeManager) {
-        
     }
 
     public void signOn(RouteManager rm) {
@@ -94,7 +88,6 @@ public class ServerConnection
             ProtocolException {
         ProtocolBuffer.IdentifyKeyReq request = ProtocolBuffer.IdentifyKeyReq.newBuilder().build();
         return null;
-
     }
 
     public void addRegisterLocation(RouteManager rm, FractusMessage m) {
@@ -127,8 +120,45 @@ public class ServerConnection
         }
         log.debug("Resolved server hostname to: " + address.getAddress().getHostAddress());
 
-        // Wait for the 
+        while (true) {
+            log.debug("Waiting for message");
 
-        log.debug("Connection thread finished");
+            while (messsageQueue.isEmpty()) {
+                try {
+                    synchronized(messsageQueue) {
+                        messsageQueue.wait();
+                    }
+                } catch (InterruptedException ex) {
+                    log.debug("Interrupted in queue.");
+                }
+            }
+
+            log.debug("Creating socket");
+            Socket socket = new Socket();
+            try {
+                log.debug("Connecting to Server...");
+                socket.connect(address);
+            } catch (IOException ex) {
+                log.error("Error: Could not connect to server", ex);
+            }
+
+            log.debug("Creating FractusConnector for server");
+            FractusConnector connection = new FractusConnector(socket, em);
+            Thread connectorThread = new Thread(connection, "ServerConnection FractusConnector");
+            connectorThread.start();
+
+            // Take out one from queue and send it
+            FractusMessage message = messsageQueue.remove();
+            log.debug("Sending Fractus Message to Connector");
+            try {
+                connection.sendMessage(message);
+            } catch (IllegalBlockSizeException ex) {
+                log.error("Encountered illegal block size exception with server", ex);
+            } catch (BadPaddingException ex) {
+                log.error("Encountered bad padding exception with server", ex);
+            } catch (IOException ex) {
+                log.error("Encountered IO Exception with server", ex);
+            }
+        }
     }
 }

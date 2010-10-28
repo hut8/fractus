@@ -45,7 +45,6 @@ public class FractusMessage {
     public static FractusMessage build(Message message) {
         log.debug("Constructing FractusMessage from messsage of type " + message.getClass().getName());
         FractusMessage prototype = new FractusMessage();
-        prototype.sequenceNumber = 0;
         // Determine first two bytes
         Short sourceDescriptor = MessageDescriptor.getDescriptor(message);
         if (sourceDescriptor == null) {
@@ -59,7 +58,6 @@ public class FractusMessage {
         DataOutputStream dos = new DataOutputStream(baos);
         try {
             dos.writeShort(sourceDescriptor);
-            dos.writeInt(0);
             message.writeTo(baos);
         } catch (IOException ex) {
             log.warn("Cannot serialize FractusMessage.", ex);
@@ -70,15 +68,15 @@ public class FractusMessage {
         return prototype;
     }
 
-    public FractusMessage(FractusPacket packet) throws IOException {
-        byte[] packetContents = packet.getContents();
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packetContents));
-        Short packetDescriptor = dis.readShort();
-        // Validate and assign descriptor
-        //ProtocolBuffer.PublicKey.newBuilder().
-
-        //Integer sequence = dis.readInt();
-        
-    }
+//    public FractusMessage(FractusPacket packet) throws IOException {
+//        byte[] packetContents = packet.getContents();
+//        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packetContents));
+//        Short packetDescriptor = dis.readShort();
+//        // Validate and assign descriptor
+//        //ProtocolBuffer.PublicKey.newBuilder().
+//
+//        //Integer sequence = dis.readInt();
+//
+//    }
     
 }

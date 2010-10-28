@@ -15,9 +15,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import us.fract.connection.FractusConnector;
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
+import us.fract.net.FractusConnector;
+import us.fract.net.EncryptionManager;
+import us.fract.net.PacketHandler;
 import us.fract.net.Callback;
 import us.fract.net.PublicKeyDirectory;
 

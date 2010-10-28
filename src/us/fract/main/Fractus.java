@@ -14,8 +14,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
+import us.fract.net.EncryptionManager;
+import us.fract.net.PacketHandler;
 import us.fract.gui.CredentialsFrame;
 import us.fract.gui.ViewManager;
 import us.fract.net.KeyPublisher;
@@ -38,7 +38,7 @@ public class Fractus
     private PacketHandler packetHandler;
     private PublicKeyDirectory publicKeyDirectory;
     private RouteManager routeManager;
-    private ServerConnection sc;
+    private ServerConnection serverConnection;
     private ContactManager contactManager;
     private UserCredentials userCredentials;
     private ViewManager viewManager;
@@ -91,7 +91,7 @@ public class Fractus
     }
 
     public ServerConnection getServerConnection() {
-        return sc;
+        return serverConnection;
     }
 
     public RouteManager getRouteManager() {
@@ -160,13 +160,15 @@ public class Fractus
         log.debug("Setting new credentials");
         setCredentials(new UserCredentials(username, password));
         log.debug("Creating server connector");
-        sc = new ServerConnection(userCredentials, serverAddress, port, encryptionManager);
-        new Thread(sc, "Server Connection").start();
-        keyPublisher = new KeyPublisher();
-        publicKeyDirectory = new PublicKeyDirectory(sc);
+        serverConnection = new ServerConnection(userCredentials, serverAddress, port, encryptionManager);
+        new Thread(serverConnection, "Server Connection").start();
+        keyPublisher = new KeyPublisher(userCredentials, serverConnection);
+        new Thread(keyPublisher, "Key Publisher").start();
+        publicKeyDirectory = new PublicKeyDirectory(serverConnection);
         packetHandler = new PacketHandler();
-        ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), sc);
+        ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
         Runtime.getRuntime().addShutdownHook(sh);
+
     }
 
     public void setCredentials(UserCredentials userCredentials) {

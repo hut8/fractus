@@ -1,6 +1,6 @@
 package us.fract.main;
 
-import us.fract.connection.EncryptionManager;
+import us.fract.net.EncryptionManager;
 
 public class KeyGeneratedEventData extends EventData {
 	private EncryptionManager encryptionManager;

@@ -9,9 +9,6 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.log4j.Logger;
 
 
-import us.fract.connection.FractusConnector;
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
 
 /**
  * Tracks individual FractusConnections to a remote node

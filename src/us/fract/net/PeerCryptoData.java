@@ -13,7 +13,6 @@ import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.util.encoders.Base64;
 
-import us.fract.connection.EncryptionManager;
 
 
 public class PeerCryptoData {

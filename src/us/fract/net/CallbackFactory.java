@@ -4,7 +4,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import us.fract.connection.FractusConnector;
 import us.fract.main.Contact;
 import us.fract.main.ContactManager;
 import us.fract.main.Fractus;

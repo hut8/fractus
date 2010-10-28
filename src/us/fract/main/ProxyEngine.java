@@ -1,5 +1,5 @@
 package us.fract.main;
-import us.fract.connection.FractusConnector;
+import us.fract.net.FractusConnector;
 
 public class ProxyEngine
 implements Runnable {

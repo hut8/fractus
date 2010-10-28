@@ -6,12 +6,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 
 import org.apache.log4j.Logger;
 
-import org.bouncycastle.util.encoders.Base64;
 
 public class FractusPacket {
     private byte[] contents;

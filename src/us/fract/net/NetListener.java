@@ -13,12 +13,9 @@ import java.util.Random;
 import net.sbbi.upnp.impls.InternetGatewayDevice;
 import net.sbbi.upnp.messages.UPNPResponseException;
 
-import us.fract.connection.FractusConnector;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
 
 public class NetListener
         implements Runnable {

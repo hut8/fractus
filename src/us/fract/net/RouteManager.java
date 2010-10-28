@@ -6,8 +6,6 @@ import java.beans.PropertyChangeSupport;
 
 
 import org.apache.log4j.Logger;
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
 
 public class RouteManager
         implements Runnable {

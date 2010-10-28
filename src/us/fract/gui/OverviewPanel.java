@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import us.fract.connection.EncryptionManager;
+import us.fract.net.EncryptionManager;
 import us.fract.main.Fractus;
 import us.fract.net.RouteManager;
 
@@ -87,11 +87,14 @@ public class OverviewPanel extends javax.swing.JPanel {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("userCredentials")) {
                     credentialPromptTOP.setBusyState(false);
-                    //credentialPromptTOP.setBusyState(evt.getNewValue() == null);
                 }
             }
         };
         fractus.addPropertyChangeListener(credentialsPCL);
+
+        if (encryptionManager.isKeyPairReady()) {
+            credentialPromptTOP.setBusyState(false);
+        }
 
         // Keypair Ready
         final TaskOverviewPanel keyPairReadyTOP = new TaskOverviewPanel("Generate EC Keypair", Images.Path.CERTIFICATE);

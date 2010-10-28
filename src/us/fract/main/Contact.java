@@ -7,8 +7,8 @@ import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
-import us.fract.connection.EncryptionManager;
-import us.fract.connection.PacketHandler;
+import us.fract.net.EncryptionManager;
+import us.fract.net.PacketHandler;
 
 import us.fract.net.FractusPacket;
 import us.fract.net.LocationManager;
