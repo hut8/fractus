@@ -1,5 +1,5 @@
 
-option java_package = "us.fract.protobuf";
+option java_package = "fractus.net";
 
 message InstantMessage {
     required string contents = 1;
@@ -21,11 +21,18 @@ message RegisterKeyReq {
 }
 
 message RegisterKeyRes {
-    
+  enum ResponseCode {
+    SUCCESS = 0;
+    AUTHENTICATION_FAILURE = 1;
+    DUPLICATE_KEY = 2;
+    INTERNAL_ERROR = 3;
+  }
+  required ResponseCode code = 1;
 }
 
 message IdentifyKeyReq {
-
+    required string encoding = 1;
+    required bytes public_key = 2;
 }
 
 message Location {
@@ -38,6 +45,12 @@ message RegisterLocationReq {
 }
 
 message RegisterLocationRes {
-
+  enum ResponseCode {
+    SUCCESS = 0;
+    AUTHENTICATION_FAILURE = 1;
+    DUPLICATE_KEY = 2;
+    INTERNAL_ERROR = 3;
+  }
+  required ResponseCode code = 1;
 }
 
