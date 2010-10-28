@@ -58,6 +58,8 @@ public class Fractus
             ParserConfigurationException {
 
         log.info("Fractus Client");
+
+
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
         executor = Executors.newFixedThreadPool(5);
         log.debug("Creating Encryption Manager");
