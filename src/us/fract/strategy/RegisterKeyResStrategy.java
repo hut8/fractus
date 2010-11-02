@@ -7,7 +7,9 @@ package us.fract.strategy;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import fractus.net.ProtocolBuffer;
+import fractus.net.ProtocolBuffer.RegisterKeyRes.ResponseCode;
 import fractus.net.ServerConnection;
+import javax.swing.JDialog;
 import org.apache.log4j.Logger;
 
 
@@ -36,8 +38,23 @@ implements PacketStrategy {
             log.warn("Could not parse response.  Exiting strategy.");
             return;
         }
+        ResponseCode code = response.getCode();
 
-        
+        if (code.equals(ResponseCode.AUTHENTICATION_FAILURE)) {
+            
+        }
+
+        if (code.equals(ResponseCode.DUPLICATE_KEY)) {
+            // Someone else has this key
+        }
+
+        if (code.equals(ResponseCode.INTERNAL_ERROR)) {
+            // Server is down
+        }
+
+        if (code.equals(ResponseCode.SUCCESS)) {
+            
+        }
     }
 
 }

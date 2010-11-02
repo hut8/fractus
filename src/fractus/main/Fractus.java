@@ -25,9 +25,7 @@ import fractus.net.RoutePublisher;
 import fractus.net.ServerConnection;
 import fractus.net.UserCredentials;
 
-public class Fractus
-        implements
-        FractusController {
+public class Fractus {
 
     private static Logger log;
 
@@ -72,6 +70,8 @@ public class Fractus
 
         log.debug("Creating View Manager");
         viewManager = new ViewManager(this);
+        ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
+        Runtime.getRuntime().addShutdownHook(sh);
     }
 
     public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
@@ -127,6 +127,9 @@ public class Fractus
         Thread routeThread = new Thread(fractus.routeManager);
         routeThread.start();
         fractus.promptForCredentials();
+
+
+
     }
 
     private void promptForCredentials() {
@@ -138,37 +141,36 @@ public class Fractus
         cf.setVisible(true);
     }
 
-    @Override
     public void shutdown() {
         Runtime.getRuntime().exit(0);
     }
 
-    
+            
 
-    /**
-     * Set credentials and server location
-     * @param serverAddress
-     * @param port
-     * @param username
-     * @param password
-     */
-    @Override
-    public void initialize(String serverAddress,
-            Integer port,
-            String username,
-            String password) {
-        log.debug("Setting new credentials");
-        setCredentials(new UserCredentials(username, password));
-        log.debug("Creating server connector");
-        serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
-        new Thread(serverConnection, "Server Connection").start();
-        keyPublisher = new KeyPublisher(userCredentials, serverConnection);
-        new Thread(keyPublisher, "Key Publisher").start();
+
+
+        
         publicKeyDirectory = new PublicKeyDirectory(serverConnection);
         packetHandler = new PacketHandler();
-        ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
-        Runtime.getRuntime().addShutdownHook(sh);
 
+
+    public void createServerConnection(String serverAddress, Integer port) {
+        log.debug("Creating server connector");
+        this.serverConnection = new ServerConnection(serverAddress, port);
+        log.debug("Creating Server Connection Thread");
+        new Thread(serverConnection, "ServerConnection").start();
+
+        createKeyPublisher();
+    }
+
+    private void createKeyPublisher() {
+        keyPublisher = new KeyPublisher(userCredentials, serverConnection);
+        new Thread(keyPublisher, "Key Publisher").start();
+    }
+
+    public void createCredentials(String username, String password) {
+        log.debug("Creating new credentials");
+                setCredentials(new UserCredentials(username, password));
     }
 
     public void setCredentials(UserCredentials userCredentials) {

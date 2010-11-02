@@ -10,6 +10,7 @@
  */
 package fractus.gui;
 
+import fractus.main.Delegate;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -72,6 +73,7 @@ public class OverviewPanel extends javax.swing.JPanel {
     protected PropertyChangeListener encryptionPCL;
     protected PropertyChangeListener credentialsPCL;
     protected PropertyChangeListener routePCL;
+    
 
     private void bindData() throws IOException {
         JPanel view = new JPanel();

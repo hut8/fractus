@@ -62,23 +62,11 @@ public class CredentialsFrame extends javax.swing.JFrame {
     }
 
     protected String username;
-
-    /**
-     * Get the value of username
-     *
-     * @return the value of username
-     */
     public String getUsername() {
         return username;
     }
 
     protected String password;
-
-    /**
-     * Get the value of password
-     *
-     * @return the value of password
-     */
     public String getPassword() {
         return password;
     }
@@ -189,7 +177,7 @@ public class CredentialsFrame extends javax.swing.JFrame {
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         if (fractus == null) return;
-        fractus.initialize(serverAddress, serverPort, username, password);
+        // fractus.initialize(serverAddress, serverPort, username, password);
         setVisible(false);
     }//GEN-LAST:event_connectButtonActionPerformed
 
