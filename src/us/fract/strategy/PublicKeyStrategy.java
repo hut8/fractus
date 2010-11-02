@@ -10,7 +10,6 @@ import java.security.GeneralSecurityException;
 import org.apache.log4j.Logger;
 import fractus.net.ClientCipher;
 import fractus.net.FractusConnector;
-import fractus.net.PacketStrategy;
 import fractus.net.ProtocolBuffer;
 
 /**

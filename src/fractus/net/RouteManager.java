@@ -87,9 +87,9 @@ public class RouteManager
     public void run() {
         //start netlistener
         new Thread(netListener, "Network Listener").start();
-        log.debug("Finding route to self");
+        log.info("Finding route to self");
         findRouteToSelf();
-        log.debug("Done finding route to self");
+        log.info("Done finding route to self");
     }
 
     public NetListener getNetListener() {

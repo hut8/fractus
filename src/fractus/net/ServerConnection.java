@@ -19,11 +19,8 @@ import org.apache.log4j.*;
 public class ServerConnection
         implements Runnable {
     private FractusConnector connector;
-    private ExceptionHandler exceptionHandler;
     private EncryptionManager em;
     private final ConcurrentLinkedQueue<FractusMessage> messsageQueue;
-    private Object sockMutex;
-    private UserCredentials uc;
     private Delegate<DelegateMethod<EventData>, EventData> signOnDelegate;
     private InetSocketAddress address;
     private String hostname;
@@ -42,16 +39,13 @@ public class ServerConnection
         log = Logger.getLogger(ServerConnection.class.getName());
     }
 
-    public ServerConnection(UserCredentials uc,
-            String hostname,
+    public ServerConnection(String hostname,
             Integer port,
             EncryptionManager em) {
-        this.uc = uc;
         this.hostname = hostname;
         this.port = port;
         this.em = em;
         messsageQueue = new ConcurrentLinkedQueue<FractusMessage>();
-        sockMutex = new Object();
         signOnDelegate = new Delegate<DelegateMethod<EventData>, EventData>();
     }
 
@@ -64,10 +58,6 @@ public class ServerConnection
 
     public Delegate<DelegateMethod<EventData>, EventData> getSignOnDelegate() {
         return signOnDelegate;
-    }
-
-    public void setExceptionHandler(ExceptionHandler exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
     }
 
     public void signOn(RouteManager rm) {
@@ -111,9 +101,6 @@ public class ServerConnection
             address = new InetSocketAddress(InetAddress.getByName(hostname), port);
         } catch (UnknownHostException e) {
             log.warn("Cannot resolve server hostname: server connection dying");
-            if (exceptionHandler != null) {
-                exceptionHandler.handle(this, e);
-            }
             return;
         }
         log.debug("Resolved server hostname to: " + address.getAddress().getHostAddress());
@@ -141,15 +128,15 @@ public class ServerConnection
             }
 
             log.debug("Creating FractusConnector for server");
-            FractusConnector connection = new FractusConnector(socket, em);
-            Thread connectorThread = new Thread(connection, "ServerConnection FractusConnector");
+            connector = new FractusConnector(socket, em);
+            Thread connectorThread = new Thread(connector, "ServerConnection FractusConnector");
             connectorThread.start();
 
             // Take out one from queue and send it
             FractusMessage message = messsageQueue.remove();
             log.debug("Sending Fractus Message to Connector");
             try {
-                connection.sendMessage(message);
+                connector.sendMessage(message);
             } catch (IllegalBlockSizeException ex) {
                 log.error("Encountered illegal block size exception with server", ex);
             } catch (BadPaddingException ex) {

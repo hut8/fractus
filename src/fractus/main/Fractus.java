@@ -56,9 +56,7 @@ public class Fractus
             IOException,
             GeneralSecurityException,
             ParserConfigurationException {
-
         log.info("Fractus Client");
-
 
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
         executor = Executors.newFixedThreadPool(5);
@@ -162,7 +160,7 @@ public class Fractus
         log.debug("Setting new credentials");
         setCredentials(new UserCredentials(username, password));
         log.debug("Creating server connector");
-        serverConnection = new ServerConnection(userCredentials, serverAddress, port, encryptionManager);
+        serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
         new Thread(serverConnection, "Server Connection").start();
         keyPublisher = new KeyPublisher(userCredentials, serverConnection);
         new Thread(keyPublisher, "Key Publisher").start();
