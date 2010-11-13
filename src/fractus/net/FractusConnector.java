@@ -16,7 +16,7 @@ import javax.crypto.IllegalBlockSizeException;
 
 import org.apache.log4j.Logger;
 import fractus.main.BinaryUtil;
-import us.fract.strategy.PublicKeyStrategy;
+import fractus.strategy.PublicKeyStrategy;
 
 public class FractusConnector
         implements Runnable {

@@ -1,6 +1,6 @@
 package fractus.net;
 
-import us.fract.strategy.PacketStrategy;
+import fractus.strategy.PacketStrategy;
 import fractus.main.BinaryUtil;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

@@ -70,6 +70,7 @@ public class Fractus {
 
         log.debug("Creating View Manager");
         viewManager = new ViewManager(this);
+
         ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
         Runtime.getRuntime().addShutdownHook(sh);
     }
@@ -145,21 +146,13 @@ public class Fractus {
         Runtime.getRuntime().exit(0);
     }
 
-            
-
-
-
-        
-        publicKeyDirectory = new PublicKeyDirectory(serverConnection);
-        packetHandler = new PacketHandler();
-
-
     public void createServerConnection(String serverAddress, Integer port) {
         log.debug("Creating server connector");
-        this.serverConnection = new ServerConnection(serverAddress, port);
+        this.serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
         log.debug("Creating Server Connection Thread");
         new Thread(serverConnection, "ServerConnection").start();
-
+        publicKeyDirectory = new PublicKeyDirectory(serverConnection);
+        packetHandler = new PacketHandler();
         createKeyPublisher();
     }
 

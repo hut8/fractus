@@ -178,6 +178,7 @@ public class CredentialsFrame extends javax.swing.JFrame {
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         if (fractus == null) return;
         // fractus.initialize(serverAddress, serverPort, username, password);
+        
         setVisible(false);
     }//GEN-LAST:event_connectButtonActionPerformed
 
