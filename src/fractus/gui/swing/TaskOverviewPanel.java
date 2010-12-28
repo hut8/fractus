@@ -9,7 +9,7 @@
  * Created on Sep 16, 2010, 12:26:10 AM
  */
 
-package fractus.gui;
+package fractus.gui.swing;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;

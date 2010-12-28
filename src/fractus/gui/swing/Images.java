@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package fractus.gui;
+package fractus.gui.swing;
 
 /**
  *

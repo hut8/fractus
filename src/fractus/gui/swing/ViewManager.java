@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package fractus.gui;
+package fractus.gui.swing;
 
 import java.io.IOException;
 import org.apache.log4j.Logger;

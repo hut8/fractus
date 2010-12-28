@@ -1,4 +1,4 @@
-package fractus.gui;
+package fractus.gui.swing;
 
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;

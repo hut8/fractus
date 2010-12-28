@@ -9,7 +9,7 @@
  * Created on Sep 15, 2010, 7:14:15 PM
  */
 
-package fractus.gui;
+package fractus.gui.swing;
 
 import fractus.main.Fractus;
 

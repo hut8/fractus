@@ -1,4 +1,4 @@
-package fractus.gui;
+package fractus.gui.swing;
 
 import java.awt.*;
 import javax.swing.*;

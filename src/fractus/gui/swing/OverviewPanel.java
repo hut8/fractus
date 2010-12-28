@@ -8,7 +8,7 @@
  *
  * Created on Sep 15, 2010, 10:53:59 PM
  */
-package fractus.gui;
+package fractus.gui.swing;
 
 import fractus.main.Delegate;
 import java.beans.PropertyChangeEvent;
