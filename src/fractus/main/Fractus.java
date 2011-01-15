@@ -8,16 +8,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.concurrent.*;
 
-import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
-import fractus.gui.CredentialsFrame;
-import fractus.gui.ViewManager;
 import fractus.net.KeyPublisher;
 import fractus.net.PublicKeyDirectory;
 import fractus.net.RouteManager;
@@ -28,7 +24,6 @@ import fractus.net.UserCredentials;
 public class Fractus {
 
     private static Logger log;
-
     static {
         log = Logger.getLogger(Fractus.class.getName());
     }
@@ -39,7 +34,6 @@ public class Fractus {
     private ServerConnection serverConnection;
     private ContactManager contactManager;
     private UserCredentials userCredentials;
-    private ViewManager viewManager;
     private java.beans.PropertyChangeSupport propertyChangeSupport;
     private KeyPublisher keyPublisher;
     private RoutePublisher routePublisher;
@@ -47,13 +41,13 @@ public class Fractus {
     public ContactManager getContactManager() {
         return contactManager;
     }
-    public static final String version = "Fractus 0.2a";
+    public static final String version = "Fractus 0.3b";
     private Executor executor;
 
     public Fractus() throws
-            IOException,
-            GeneralSecurityException,
-            ParserConfigurationException {
+    IOException,
+    GeneralSecurityException,
+    ParserConfigurationException {
         log.info("Fractus Client");
 
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
@@ -67,9 +61,6 @@ public class Fractus {
 
         log.debug("Creating Route Manager");
         routeManager = new RouteManager(encryptionManager, packetHandler);
-
-        log.debug("Creating View Manager");
-        viewManager = new ViewManager(this);
 
         ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
         Runtime.getRuntime().addShutdownHook(sh);
@@ -109,37 +100,23 @@ public class Fractus {
      * @throws ParserConfigurationException
      */
     public static void main(String[] args)
-            throws UnknownHostException,
-            IOException,
-            GeneralSecurityException,
-            ParserConfigurationException {
+    throws UnknownHostException,
+    IOException,
+    GeneralSecurityException,
+    ParserConfigurationException {
         PropertyConfigurator.configure("lib/log4j.properties");
 
-        try {
-            log.debug("Trying to set Look and Feel to native...");
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            log.debug("Success");
-        } catch (Throwable t) {
-            log.warn("Unable to set UI - reverting to fugly interface.");
-        }
         log.debug("Creating Fractus object");
         Fractus fractus = new Fractus();
         log.debug("Finished Fractus Constructor");
         Thread routeThread = new Thread(fractus.routeManager);
         routeThread.start();
         fractus.promptForCredentials();
-
-
-
     }
 
     private void promptForCredentials() {
         log.debug("Prompting for credentials...");
-        CredentialsFrame cf = CredentialsFrame.getInstance();
-        cf.setFractus(this);
-        cf.pack();
-        cf.setLocationRelativeTo(null);
-        cf.setVisible(true);
+        // TODO: Show credentials dialog
     }
 
     public void shutdown() {
@@ -163,7 +140,7 @@ public class Fractus {
 
     public void createCredentials(String username, String password) {
         log.debug("Creating new credentials");
-                setCredentials(new UserCredentials(username, password));
+        setCredentials(new UserCredentials(username, password));
     }
 
     public void setCredentials(UserCredentials userCredentials) {
