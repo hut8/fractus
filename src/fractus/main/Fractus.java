@@ -12,6 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.trolltech.qt.QThread;
+import com.trolltech.qt.gui.QApplication;
+
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
 import fractus.net.KeyPublisher;
@@ -20,6 +23,9 @@ import fractus.net.RouteManager;
 import fractus.net.RoutePublisher;
 import fractus.net.ServerConnection;
 import fractus.net.UserCredentials;
+import fractus.ui.CredentialsDialog;
+import fractus.ui.DemoThread;
+import fractus.ui.IMWindow;
 
 public class Fractus {
 
@@ -43,6 +49,9 @@ public class Fractus {
     }
     public static final String version = "Fractus 0.3b";
     private Executor executor;
+	private String username;
+	private IMWindow window;
+	private CredentialsDialog creds;
 
     public Fractus() throws
     IOException,
@@ -111,12 +120,43 @@ public class Fractus {
         log.debug("Finished Fractus Constructor");
         Thread routeThread = new Thread(fractus.routeManager);
         routeThread.start();
-        fractus.promptForCredentials();
+        QApplication.initialize(args);
+        
+        fractus.promptForCredentials(fractus);
+        QApplication.exec();
+    }
+    
+    public void login(String username, String password, String server) {
+    	this.username = username;
+    	System.out.println("login: "+username+"@"+server);
+    	//TODO login to server
+    	creds.hide();
+    	window = new IMWindow(this);
+    	window.show();
+	    window.raise();
+	    //Runnable t = new DemoThread(this);
+	    //QThread thread = new QThread(t);
+	    //thread.start();
+	    
+    }
+    
+    public void receiveMessage(String buddy, String message) {
+    	window.receiveMessage(buddy, message);
+    }
+    
+    public void sendMessage(String buddy, String message) {
+    	System.out.println("send("+buddy+"): "+message);
+    	//TODO actually send message
+    }
+    public String getme() {
+    	return username;
     }
 
-    private void promptForCredentials() {
+    private void promptForCredentials(Fractus fractus) {
         log.debug("Prompting for credentials...");
-        // TODO: Show credentials dialog
+        creds = new CredentialsDialog(fractus);
+	    creds.show();
+	    creds.raise();
     }
 
     public void shutdown() {

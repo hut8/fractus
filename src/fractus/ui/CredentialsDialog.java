@@ -2,6 +2,8 @@ package fractus.ui;
 
 import com.trolltech.qt.gui.*;
 
+import fractus.main.Fractus;
+
 public class CredentialsDialog extends QWidget {
 
 	/**
@@ -12,6 +14,7 @@ public class CredentialsDialog extends QWidget {
 	 private QLineEdit serverLE;
 	 private QPushButton loginB;
 	 private QPushButton quitB;
+	 private Fractus f;
 	
 	public static void main(String[] args) {
 		 QApplication.initialize(args);
@@ -29,7 +32,7 @@ public class CredentialsDialog extends QWidget {
 		String username = usernameLE.text();
 		String password = passwordLE.text();
 		String server = serverLE.text();
-		System.out.println("login: "+username+"@"+server);
+		f.login(username,password,server);
 		
 	}
 	
@@ -39,10 +42,18 @@ public class CredentialsDialog extends QWidget {
 	
 	public CredentialsDialog() {
 		this(null);
+		
+		
 	}
 	
-	public CredentialsDialog(QWidget parent) {
+	public CredentialsDialog(Fractus fractus) {
+		this(fractus,null);
+		
+	}
+	
+	public CredentialsDialog(Fractus fractus, QWidget parent) {
         super(parent);
+        f = fractus;
         QLabel userL = new QLabel(tr("User:"));
         usernameLE = new QLineEdit();
         usernameLE.setFocus();
