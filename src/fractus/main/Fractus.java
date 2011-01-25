@@ -23,9 +23,11 @@ import fractus.net.RouteManager;
 import fractus.net.RoutePublisher;
 import fractus.net.ServerConnection;
 import fractus.net.UserCredentials;
+import fractus.ui.BuddyTab;
 import fractus.ui.CredentialsDialog;
 import fractus.ui.DemoThread;
 import fractus.ui.IMWindow;
+import fractus.ui.UIManager;
 
 public class Fractus {
 
@@ -50,8 +52,9 @@ public class Fractus {
     public static final String version = "Fractus 0.3b";
     private Executor executor;
 	private String username;
-	private IMWindow window;
+	private UIManager winman;
 	private CredentialsDialog creds;
+	
 
     public Fractus() throws
     IOException,
@@ -126,28 +129,38 @@ public class Fractus {
         QApplication.exec();
     }
     
+    
     public void login(String username, String password, String server) {
     	this.username = username;
     	System.out.println("login: "+username+"@"+server);
     	//TODO login to server
     	creds.hide();
-    	window = new IMWindow(this);
-    	window.show();
-	    window.raise();
-	    //Runnable t = new DemoThread(this);
-	    //QThread thread = new QThread(t);
-	    //thread.start();
+    	
+    	winman = new UIManager(this);
+    	
+	    
+	    //uncomment this to run the ui demo thread
+	    Runnable t = new DemoThread(this);
+	    QThread thread = new QThread(t);
+	    thread.start();
 	    
     }
     
-    public void receiveMessage(String buddy, String message) {
-    	window.receiveMessage(buddy, message);
+    public UIManager getWinman() {
+    	return winman;
     }
     
+        
     public void sendMessage(String buddy, String message) {
     	System.out.println("send("+buddy+"): "+message);
     	//TODO actually send message
     }
+    
+    public void receiveMessage(String buddy, String message) {
+    	System.out.println("receive("+buddy+"): "+message);
+    	winman.receiveMessage(buddy, message);
+    }
+    
     public String getme() {
     	return username;
     }

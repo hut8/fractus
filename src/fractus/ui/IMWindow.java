@@ -13,43 +13,53 @@ public class IMWindow extends QWidget {
 	/**
 	 * @param args
 	 */
-	QTabWidget tabs;
+	FractusTabWidget tabs;
 	Fractus f;
 	private Map<String, IMTab> map;
 	
-	
-	
-	public void quit() {
-		System.exit(0);
+
+	public IMTab getTab(String buddy) {
+		IMTab tab = map.get(buddy);
+		
+		return tab;
 	}
 	
-	public synchronized void receiveMessage(final String buddy, final String message) {
-		Runnable r = new Runnable() {
-			
-			public void run() {
-				IMTab tab = map.get(buddy);
-				if (tab == null) {
-					tab = new IMTab(f,buddy);
-					int index = tabs.addTab(tab, buddy);
-					map.put(buddy, tab);
-				}
-				tab.receiveMessage(message);
-			}
-		};
-		QApplication.invokeLater(r);
-	
+	public IMTab createTab(Buddy buddy) {
+		IMTab tab = new IMTab(f,buddy.getName());
+		int index = tabs.addTab(tab, buddy.getName());
+		if (buddy.isSignedOn())
+			tabs.setTabIcon(index, UIManager.online);
+		else
+			tabs.setTabIcon(index, UIManager.offline);
+		buddy.setTabIndex(index);
+		buddy.setWin(this);
+		map.put(buddy.getName(), tab);
+		return tab;
 		
 	}
 	
 	
+	public void addBuddyTab(BuddyTab t) {
+		int index = tabs.addTab(t,"buddies");
+	}
+	
+	public void switchToTab(Buddy b){
+		IMTab tab = getTab(b.getName());
+		if (tab == null)
+			createTab(b);
+		tabs.setCurrentWidget(tab);
+	}
+		
+	
 	public IMWindow(Fractus fractus) {
 		this(fractus,null);
 	}
-	
+		
 	public IMWindow(Fractus fractus,QWidget parent) {
         super(parent);
         f = fractus;
-        tabs = new QTabWidget();
+        tabs = new FractusTabWidget();
+        
         map = Collections.synchronizedMap(new HashMap<String, IMTab>());
 
         
@@ -62,7 +72,13 @@ public class IMWindow extends QWidget {
        // tabs.resize(300, 200);
         setWindowTitle(tr("fractus chat"));
         resize(300,200);
+        
 
+	}
+
+	public void setTabIcon(int tabIndex, QIcon icon) {
+		tabs.setTabIcon(tabIndex, icon);
+		
 	}
 
 }

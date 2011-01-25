@@ -17,6 +17,7 @@ public class ShutdownProcedure
 	public void run() {
 		Logger.getAnonymousLogger().log(Level.INFO,"ShutdownHook: starting shutdown procedure");
 		Logger.getAnonymousLogger().log(Level.INFO,"ShutdownHook: asking NetListener to close UPnP if possible");
-		listener.closeUpnp();
+		if (listener != null)
+			listener.closeUpnp();
 	}
 }

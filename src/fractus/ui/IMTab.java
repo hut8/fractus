@@ -28,7 +28,7 @@ public class IMTab extends QWidget {
 	}
 	
 	public void receiveMessage(String message) {
-		textViewer.append(buddy+":message");
+		textViewer.append(buddy+":"+message);
 	}
 	
 		
@@ -41,7 +41,7 @@ public class IMTab extends QWidget {
         f = fractus;
         this.buddy = buddy;
         textViewer = new QTextEdit();
-        textViewer.resize(200, 150);
+       // textViewer.resize(200, 150);
         textViewer.setReadOnly(true);
         entryLE = new QLineEdit();
         entryLE.setFocus();
