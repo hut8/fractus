@@ -28,6 +28,14 @@ public class Buddy {
 		
 	}
 	
+	public void closeTab() {
+		
+		win.removeTab(this,tabIndex);
+		tab = null;
+		tabIndex = -1;
+		win = null;
+	}
+	
 	public void setTab(IMTab t) {
 		tab = t;
 	}
@@ -55,6 +63,11 @@ public class Buddy {
 	}
 	public int getTabIndex() {
 		return tabIndex;
+	}
+
+	public void decrementTabIndex() {
+		tabIndex--;
+		
 	}
 
 }

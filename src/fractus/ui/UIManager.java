@@ -1,5 +1,7 @@
 package fractus.ui;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import com.trolltech.qt.gui.QApplication;
@@ -17,20 +19,33 @@ public class UIManager {
 	private Fractus f;
 	public static QIcon offline = new QIcon(new QPixmap("lib/offline.png"));
 	public static QIcon online = new QIcon(new QPixmap("lib/online.png"));
+	public static QIcon closeIcon = new QIcon(new QPixmap("lib/close.png"));
+	 public static final String DATE_FORMAT_NOW = "HH:mm";
+
 	
 	public UIManager(Fractus f) {
 		 
 		map = new HashMap<String,Buddy>();
-		window = new IMWindow(f);
+		window = new IMWindow(f,this);
     	window.show();
 	    window.raise();
 	    buddytab = new BuddyTab(this);
 	    window.addBuddyTab(buddytab);
 	}
 	
-	private Buddy getBuddy(String buddy) {
+	public static String now() {
+	    Calendar cal = Calendar.getInstance();
+	    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+	    return sdf.format(cal.getTime());
+
+	  }
+
+	
+	public Buddy getBuddy(String buddy) {
 		return map.get(buddy);
 	}
+	
+
 	
 
 	public void sendMessage(String buddy, String message) {

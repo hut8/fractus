@@ -14,6 +14,8 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.trolltech.qt.QThread;
 import com.trolltech.qt.gui.QApplication;
+import com.trolltech.qt.gui.QPlastiqueStyle;
+import com.trolltech.qt.gui.QStyleFactory;
 
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
@@ -125,6 +127,8 @@ public class Fractus {
         routeThread.start();
         QApplication.initialize(args);
         
+        QApplication.setStyle(new QPlastiqueStyle());
+
         fractus.promptForCredentials(fractus);
         QApplication.exec();
     }

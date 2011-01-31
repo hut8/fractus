@@ -27,11 +27,20 @@ public class CredentialsDialog extends QWidget {
 
 	}
 	
+	public void closeEvent(QCloseEvent q) {
+		super.closeEvent(q);
+		System.exit(0);
+	}
+	
 	public void login() {
 		
 		String username = usernameLE.text();
 		String password = passwordLE.text();
 		String server = serverLE.text();
+		if ((username.length() == 0 || password.length() == 0) || server.length() == 0) {
+			System.out.println("Please ensure username, password, and server are not empty");
+			return;
+		}
 		f.login(username,password,server);
 		
 	}
@@ -71,6 +80,7 @@ public class CredentialsDialog extends QWidget {
         
         loginB.clicked.connect(this,"login()");
         quitB.clicked.connect(this,"quit()");
+        usernameLE.returnPressed.connect(this, "login()");
         serverLE.returnPressed.connect(this, "login()");
         passwordLE.returnPressed.connect(this,"login()");
         
@@ -86,6 +96,7 @@ public class CredentialsDialog extends QWidget {
         setLayout(layout);
         
         setWindowTitle(tr("Fractus"));
+        
        
 
 	}
