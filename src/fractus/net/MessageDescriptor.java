@@ -19,7 +19,7 @@ public class MessageDescriptor {
         // Key Management
     public final static short PUBLIC_KEY = 0x01a4;
     public final static short REGISTER_KEY_REQ = 0x0bbb;
-    public final static short PUBLISH_KEY_RES = 0x18d9;
+    public final static short REGISTER_KEY_RES = 0x18d9;
     public final static short REVOKE_KEY_REQ = 0x6a3c;
     public final static short REVOKE_KEY_RES = 0x6df3;
     public final static short IDENTIFY_KEY_REQ = 0x739e;

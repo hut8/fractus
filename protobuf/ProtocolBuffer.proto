@@ -5,14 +5,18 @@ message InstantMessage {
     required string contents = 1;
 }
 
-message PublicKey {
-    required string encoding = 1;
-    required bytes public_key = 2;
-}
-
 message ClientInfo {
     optional string version = 1;
     optional string location = 2;
+}
+
+////////////////////
+// Key Management //
+////////////////////
+
+message PublicKey {
+    required string encoding = 1;
+    required bytes public_key = 2;
 }
 
 message RegisterKeyReq {
@@ -35,6 +39,10 @@ message IdentifyKeyReq {
     required bytes public_key = 2;
 }
 
+//////////////
+// Location //
+//////////////
+
 message Location {
     optional string address = 1;
     optional int32 port = 2;
@@ -54,3 +62,31 @@ message RegisterLocationRes {
   required ResponseCode code = 1;
 }
 
+//////////////
+// Contacts //
+//////////////
+
+message AddContactReq {
+  optional string username = 1;
+  optional string message = 2;
+}
+
+message AddContactRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    REDUNDANT = 1;
+    INVALID_USER = 2;
+  }
+}
+
+message RemoveContactReq {
+  optional string username = 1;
+}
+
+message RemoveContactRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    REDUNDANT = 1;
+  }
+  required ResponseCode code = 1;
+}
