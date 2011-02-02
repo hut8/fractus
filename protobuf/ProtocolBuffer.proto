@@ -19,6 +19,8 @@ message PublicKey {
     required bytes public_key = 2;
 }
 
+// Key registration
+
 message RegisterKeyReq {
     required string username = 1;
     required string password = 2;
@@ -34,9 +36,22 @@ message RegisterKeyRes {
   required ResponseCode code = 1;
 }
 
+// Key identification
+
 message IdentifyKeyReq {
     required string encoding = 1;
     required bytes public_key = 2;
+}
+
+message IdentifyKeyRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    UNKNOWN_KEY = 1; // If key is not in database ||
+		     //requestor not contact with target
+    
+  }
+  required ResponseCode code = 1;
+  optional string username = 2;
 }
 
 //////////////
@@ -76,7 +91,9 @@ message AddContactRes {
     SUCCESS = 0;
     REDUNDANT = 1;
     INVALID_USER = 2;
+    SERVER_ERROR = 3;
   }
+  required ResponseCode code = 1;
 }
 
 message RemoveContactReq {
@@ -86,7 +103,8 @@ message RemoveContactReq {
 message RemoveContactRes {
   enum ResponseCode {
     SUCCESS = 0;
-    REDUNDANT = 1;
+    INVALID = 1;  // No such username or no such existing contact.
+    SERVER_ERROR = 2;
   }
   required ResponseCode code = 1;
 }
