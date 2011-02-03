@@ -10,6 +10,27 @@ message ClientInfo {
     optional string location = 2;
 }
 
+message ContactDataReq {
+  repeated string usernames = 1;
+}
+
+message ContactData {
+  required string username = 1;
+  repeated Location location = 2;
+}
+
+message ContactDataRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    SERVER_ERROR = 1;
+    AUTHENTICATION_FAILURE = 2;
+  }
+  required ResponseCode code = 1;
+
+  // The actual contacts:
+  repeated ContactData contact_data = 2;
+}
+
 ////////////////////
 // Key Management //
 ////////////////////
@@ -123,3 +144,5 @@ message RemoveContactRes {
   }
   required ResponseCode code = 1;
 }
+
+
