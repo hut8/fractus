@@ -54,6 +54,21 @@ message IdentifyKeyRes {
   optional string username = 2;
 }
 
+// Key revocation (sign-off)
+
+message RevokeKeyReq {
+
+}
+
+message RevokeKeyRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    SERVER_ERROR = 1;
+    
+  }
+  required ResponseCode code = 1;
+}
+
 //////////////
 // Location //
 //////////////
