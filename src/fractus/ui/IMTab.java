@@ -3,7 +3,7 @@ package fractus.ui;
 import java.sql.Date;
 import java.sql.Time;
 
-import sun.tools.jstat.Alignment;
+
 
 import com.trolltech.qt.core.Qt;
 import com.trolltech.qt.gui.*;

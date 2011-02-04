@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="lib/upnplib/sbbi-upnplib-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/qtjambi-macosx-gcc-4.6.3.jar"/>
 	<classpathentry kind="lib" path="lib/qtjambi-util-4.6.3.jar"/>
+	<classpathentry kind="lib" path="lib/qtjambi-linux64-gcc-4.6.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

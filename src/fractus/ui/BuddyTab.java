@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import sun.tools.jstat.Alignment;
+
 
 import com.trolltech.qt.core.QObject;
 import com.trolltech.qt.core.Qt;
