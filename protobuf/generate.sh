@@ -1,1 +1,1 @@
-protoc -I=. --java_out=. ./ProtocolBuffer.proto
+protoc -I=. --java_out=../src/ ./ProtocolBuffer.proto
