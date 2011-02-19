@@ -52,7 +52,7 @@ message RegisterKeyRes {
     SUCCESS = 0;
     AUTHENTICATION_FAILURE = 1;
     DUPLICATE_KEY = 2;
-    INTERNAL_ERROR = 3;
+    SERVER_ERROR = 3;
   }
   required ResponseCode code = 1;
 }
@@ -69,7 +69,7 @@ message IdentifyKeyRes {
     SUCCESS = 0;
     UNKNOWN_KEY = 1; // If key is not in database ||
 		     //requestor not contact with target
-    
+    AUTHORIZATION_FAILURE = 2;    
   }
   required ResponseCode code = 1;
   optional string username = 2;
@@ -85,7 +85,7 @@ message RevokeKeyRes {
   enum ResponseCode {
     SUCCESS = 0;
     SERVER_ERROR = 1;
-    
+    AUTHORIZATION_FAILURE = 2;
   }
   required ResponseCode code = 1;
 }
@@ -106,7 +106,7 @@ message RegisterLocationReq {
 message RegisterLocationRes {
   enum ResponseCode {
     SUCCESS = 0;
-    AUTHENTICATION_FAILURE = 1;
+    AUTHORIZATION_FAILURE = 1;
     DUPLICATE_KEY = 2;
     INTERNAL_ERROR = 3;
   }
@@ -125,9 +125,9 @@ message AddContactReq {
 message AddContactRes {
   enum ResponseCode {
     SUCCESS = 0;
-    REDUNDANT = 1;
-    INVALID_USER = 2;
-    SERVER_ERROR = 3;
+    INVALID = 1; // Redundant add or no such username
+    SERVER_ERROR = 2;
+    AUTHORIZATION_FAILURE = 3;
   }
   required ResponseCode code = 1;
 }
@@ -141,8 +141,7 @@ message RemoveContactRes {
     SUCCESS = 0;
     INVALID = 1;  // No such username or no such existing contact.
     SERVER_ERROR = 2;
+    AUTHORIZATION_FAILURE = 3;
   }
   required ResponseCode code = 1;
 }
-
-
