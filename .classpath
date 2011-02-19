@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/upnplib/mx4j-tools.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/sbbi-jmx-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/sbbi-upnplib-1.0.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
