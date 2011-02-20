@@ -4,10 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk16-145.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="lib/looks.jar"/>
 	<classpathentry kind="lib" path="lib/protobuf-java-2.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/qtjambi-4.6.3.jar"/>
-	<classpathentry kind="lib" path="lib/swingx-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/commons-jxpath-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/commons-logging-api.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/commons-logging.jar"/>
@@ -17,9 +14,6 @@
 	<classpathentry kind="lib" path="lib/upnplib/mx4j-tools.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/sbbi-jmx-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/upnplib/sbbi-upnplib-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/qtjambi-macosx-gcc-4.6.3.jar"/>
-	<classpathentry kind="lib" path="lib/qtjambi-util-4.6.3.jar"/>
-	<classpathentry kind="lib" path="lib/qtjambi-linux64-gcc-4.6.3.jar"/>
-	<classpathentry kind="lib" path="lib/qtjambi-linux32-gcc-4.6.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

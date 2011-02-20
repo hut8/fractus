@@ -11,13 +11,11 @@ import java.util.concurrent.*;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.swt.widgets.Display;
 
-import com.trolltech.qt.QThread;
-import com.trolltech.qt.gui.QApplication;
-import com.trolltech.qt.gui.QCleanlooksStyle;
-import com.trolltech.qt.gui.QPlastiqueStyle;
-import com.trolltech.qt.gui.QStyleFactory;
 
+import fractus.gui.CredentialsWindow;
+import fractus.gui.GuiManager;
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
 import fractus.net.KeyPublisher;
@@ -26,11 +24,6 @@ import fractus.net.RouteManager;
 import fractus.net.RoutePublisher;
 import fractus.net.ServerConnection;
 import fractus.net.UserCredentials;
-import fractus.ui.BuddyTab;
-import fractus.ui.CredentialsDialog;
-import fractus.ui.DemoThread;
-import fractus.ui.IMWindow;
-import fractus.ui.UIManager;
 
 public class Fractus {
 
@@ -48,6 +41,7 @@ public class Fractus {
     private java.beans.PropertyChangeSupport propertyChangeSupport;
     private KeyPublisher keyPublisher;
     private RoutePublisher routePublisher;
+    private GuiManager guiManager;
 
     public ContactManager getContactManager() {
         return contactManager;
@@ -55,16 +49,16 @@ public class Fractus {
     public static final String version = "Fractus 0.3b";
     private Executor executor;
 	private String username;
-	private UIManager winman;
-	private CredentialsDialog creds;
-	
 
     public Fractus() throws
     IOException,
     GeneralSecurityException,
     ParserConfigurationException {
         log.info("Fractus Client");
-
+        
+        guiManager = new GuiManager();
+        guiManager.getCredentialsWindow().open();
+        
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
         executor = Executors.newFixedThreadPool(5);
         log.debug("Creating Encryption Manager");
@@ -104,6 +98,8 @@ public class Fractus {
     public RouteManager getRouteManager() {
         return routeManager;
     }
+    
+
 
     /**
      * @param args
@@ -126,57 +122,13 @@ public class Fractus {
         log.debug("Finished Fractus Constructor");
         Thread routeThread = new Thread(fractus.routeManager);
         routeThread.start();
-        QApplication.initialize(args);
-        
-        QApplication.setStyle(new QCleanlooksStyle());
-
-        fractus.promptForCredentials(fractus);
-        QApplication.exec();
+        fractus.dispatchEvents();
     }
     
-    
-    public void login(String username, String password, String server) {
-    	this.username = username;
-    	System.out.println("login: "+username+"@"+server);
-    	//TODO login to server
-    	creds.hide();
-    	
-    	winman = new UIManager(this);
-    	
-	    
-	    //uncomment this to run the ui demo thread
-	    Runnable t = new DemoThread(this);
-	    QThread thread = new QThread(t);
-	    thread.start();
-	    
+    public void dispatchEvents() {
+    	guiManager.dispatchEvents();
     }
     
-    public UIManager getWinman() {
-    	return winman;
-    }
-    
-        
-    public void sendMessage(String buddy, String message) {
-    	System.out.println("send("+buddy+"): "+message);
-    	//TODO actually send message
-    }
-    
-    public void receiveMessage(String buddy, String message) {
-    	System.out.println("receive("+buddy+"): "+message);
-    	winman.receiveMessage(buddy, message);
-    }
-    
-    public String getme() {
-    	return username;
-    }
-
-    private void promptForCredentials(Fractus fractus) {
-        log.debug("Prompting for credentials...");
-        creds = new CredentialsDialog(fractus);
-	    creds.show();
-	    creds.raise();
-    }
-
     public void shutdown() {
         Runtime.getRuntime().exit(0);
     }
