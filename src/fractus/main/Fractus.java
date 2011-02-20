@@ -11,8 +11,11 @@ import java.util.concurrent.*;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.swt.widgets.Display;
 
 
+import fractus.gui.CredentialsWindow;
+import fractus.gui.GuiManager;
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
 import fractus.net.KeyPublisher;
@@ -38,6 +41,7 @@ public class Fractus {
     private java.beans.PropertyChangeSupport propertyChangeSupport;
     private KeyPublisher keyPublisher;
     private RoutePublisher routePublisher;
+    private GuiManager guiManager;
 
     public ContactManager getContactManager() {
         return contactManager;
@@ -51,7 +55,10 @@ public class Fractus {
     GeneralSecurityException,
     ParserConfigurationException {
         log.info("Fractus Client");
-
+        
+        guiManager = new GuiManager();
+        guiManager.getCredentialsWindow().open();
+        
         propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
         executor = Executors.newFixedThreadPool(5);
         log.debug("Creating Encryption Manager");
@@ -91,6 +98,8 @@ public class Fractus {
     public RouteManager getRouteManager() {
         return routeManager;
     }
+    
+
 
     /**
      * @param args
@@ -113,14 +122,13 @@ public class Fractus {
         log.debug("Finished Fractus Constructor");
         Thread routeThread = new Thread(fractus.routeManager);
         routeThread.start();
-
-        fractus.promptForCredentials(fractus);
+        fractus.dispatchEvents();
     }
-      
-    private void promptForCredentials(Fractus fractus) {
-        log.debug("Prompting for credentials...");
+    
+    public void dispatchEvents() {
+    	guiManager.dispatchEvents();
     }
-
+    
     public void shutdown() {
         Runtime.getRuntime().exit(0);
     }
