@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Display;
 
 import fractus.gui.CredentialsWindow;
 import fractus.gui.GuiManager;
+import fractus.main.InterfaceManager.InterfaceType;
 import fractus.net.EncryptionManager;
 import fractus.net.PacketHandler;
 import fractus.net.KeyPublisher;
@@ -27,136 +28,145 @@ import fractus.net.UserCredentials;
 
 public class Fractus {
 
-    private static Logger log;
-    static {
-        log = Logger.getLogger(Fractus.class.getName());
-    }
-    private EncryptionManager encryptionManager;
-    private PacketHandler packetHandler;
-    private PublicKeyDirectory publicKeyDirectory;
-    private RouteManager routeManager;
-    private ServerConnection serverConnection;
-    private ContactManager contactManager;
-    private UserCredentials userCredentials;
-    private java.beans.PropertyChangeSupport propertyChangeSupport;
-    private KeyPublisher keyPublisher;
-    private RoutePublisher routePublisher;
-    private GuiManager guiManager;
+	private static Logger log;
+	static {
+		log = Logger.getLogger(Fractus.class.getName());
+	}
+	private EncryptionManager encryptionManager;
+	private PacketHandler packetHandler;
+	private PublicKeyDirectory publicKeyDirectory;
+	private RouteManager routeManager;
+	private ServerConnection serverConnection;
+	private ContactManager contactManager;
+	private UserCredentials userCredentials;
+	private java.beans.PropertyChangeSupport propertyChangeSupport;
+	private KeyPublisher keyPublisher;
+	private RoutePublisher routePublisher;
 
-    public ContactManager getContactManager() {
-        return contactManager;
-    }
-    public static final String version = "Fractus 0.3b";
-    private Executor executor;
+	public ContactManager getContactManager() {
+		return contactManager;
+	}
+	public static final String version = "Fractus 0.3b";
+	private Executor executor;
 	private String username;
 
-    public Fractus() throws
-    IOException,
-    GeneralSecurityException,
-    ParserConfigurationException {
-        log.info("Fractus Client");
-        
-        guiManager = new GuiManager();
-        guiManager.getCredentialsWindow().open();
-        
-        propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
-        executor = Executors.newFixedThreadPool(5);
-        log.debug("Creating Encryption Manager");
-        encryptionManager = new EncryptionManager();
-        encryptionManager.initialize(executor);
+	public Fractus() throws
+	IOException,
+	GeneralSecurityException,
+	ParserConfigurationException {
+		log.info("Fractus Client");
 
-        log.debug("Creating Contact Manager");
-        contactManager = new ContactManager(encryptionManager, packetHandler, publicKeyDirectory);
+		propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
+		executor = Executors.newFixedThreadPool(5);
+		log.debug("Creating Encryption Manager");
+		encryptionManager = new EncryptionManager();
+		encryptionManager.initialize(executor);
 
-        log.debug("Creating Route Manager");
-        routeManager = new RouteManager(encryptionManager, packetHandler);
+		log.debug("Creating Contact Manager");
+		contactManager = new ContactManager(encryptionManager, packetHandler, publicKeyDirectory);
 
-        ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
-        Runtime.getRuntime().addShutdownHook(sh);
-    }
+		log.debug("Creating Route Manager");
+		routeManager = new RouteManager(encryptionManager, packetHandler);
 
-    public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
+		ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
+		Runtime.getRuntime().addShutdownHook(sh);
+	}
 
-    public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
-    }
+	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
 
-    public PacketHandler getPacketHandler() {
-        return packetHandler;
-    }
+	public void removePropertyChangeListener(java.beans.PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
 
-    public EncryptionManager getEncryptionManager() {
-        return encryptionManager;
-    }
+	public PacketHandler getPacketHandler() {
+		return packetHandler;
+	}
 
-    public ServerConnection getServerConnection() {
-        return serverConnection;
-    }
+	public EncryptionManager getEncryptionManager() {
+		return encryptionManager;
+	}
 
-    public RouteManager getRouteManager() {
-        return routeManager;
-    }
-    
+	public ServerConnection getServerConnection() {
+		return serverConnection;
+	}
+
+	public RouteManager getRouteManager() {
+		return routeManager;
+	}
 
 
-    /**
-     * @param args
-     * @throws IOException s
-     * @throws UnknownHostException
-     * @throws NoSuchProviderException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidAlgorithmParameterException
-     * @throws ParserConfigurationException
-     */
-    public static void main(String[] args)
-    throws UnknownHostException,
-    IOException,
-    GeneralSecurityException,
-    ParserConfigurationException {
-        PropertyConfigurator.configure("lib/log4j.properties");
 
-        log.debug("Creating Fractus object");
-        Fractus fractus = new Fractus();
-        log.debug("Finished Fractus Constructor");
-        Thread routeThread = new Thread(fractus.routeManager);
-        routeThread.start();
-        fractus.dispatchEvents();
-    }
-    
-    public void dispatchEvents() {
-    	guiManager.dispatchEvents();
-    }
-    
-    public void shutdown() {
-        Runtime.getRuntime().exit(0);
-    }
+	/**
+	 * @param args
+	 * @throws IOException s
+	 * @throws UnknownHostException
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidAlgorithmParameterException
+	 * @throws ParserConfigurationException
+	 */
+	public static void main(String[] args)
+	throws UnknownHostException,
+	IOException,
+	GeneralSecurityException,
+	ParserConfigurationException {
+		PropertyConfigurator.configure("lib/log4j.properties");
 
-    public void createServerConnection(String serverAddress, Integer port) {
-        log.debug("Creating server connector");
-        this.serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
-        log.debug("Creating Server Connection Thread");
-        new Thread(serverConnection, "ServerConnection").start();
-        publicKeyDirectory = new PublicKeyDirectory(serverConnection);
-        packetHandler = new PacketHandler();
-        createKeyPublisher();
-    }
+		// Determine interface type
+		InterfaceManager.InterfaceType interfaceType = InterfaceType.CLI;
+		if (args.length > 0) {
+			// Parse correct interface
+			if (args[0].equalsIgnoreCase("GUI")) {
+				interfaceType = InterfaceType.GUI;
+			} else if (args[0].equalsIgnoreCase("TUI")) {
+				interfaceType = InterfaceType.TUI;
+			} else if (args[0].equalsIgnoreCase("CLI")) {
+				interfaceType = InterfaceType.CLI;
+			}
+			else {
+				System.out.println("Invalid first argument (expecting interface: [GUI|TUI|CLI])");
+			}
+		}
+		
+		// Create interface manager 
 
-    private void createKeyPublisher() {
-        keyPublisher = new KeyPublisher(userCredentials, serverConnection);
-        new Thread(keyPublisher, "Key Publisher").start();
-    }
+		log.debug("Creating Fractus object");
+		Fractus fractus = new Fractus();
+		log.debug("Finished Fractus Constructor");
+		Thread routeThread = new Thread(fractus.routeManager);
+		routeThread.start();
+	}
 
-    public void createCredentials(String username, String password) {
-        log.debug("Creating new credentials");
-        setCredentials(new UserCredentials(username, password));
-    }
+	public void shutdown() {
+		Runtime.getRuntime().exit(0);
+	}
 
-    public void setCredentials(UserCredentials userCredentials) {
-        UserCredentials oldUc = this.userCredentials;
-        this.userCredentials = userCredentials;
-        propertyChangeSupport.firePropertyChange("userCredentials",
-                oldUc, userCredentials);
-    }
+	public void createServerConnection(String serverAddress, Integer port) {
+		log.debug("Creating server connector");
+		this.serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
+		log.debug("Creating Server Connection Thread");
+		new Thread(serverConnection, "ServerConnection").start();
+		publicKeyDirectory = new PublicKeyDirectory(serverConnection);
+		packetHandler = new PacketHandler();
+		createKeyPublisher();
+	}
+
+	private void createKeyPublisher() {
+		keyPublisher = new KeyPublisher(userCredentials, serverConnection);
+		new Thread(keyPublisher, "Key Publisher").start();
+	}
+
+	public void createCredentials(String username, String password) {
+		log.debug("Creating new credentials");
+		setCredentials(new UserCredentials(username, password));
+	}
+
+	public void setCredentials(UserCredentials userCredentials) {
+		UserCredentials oldUc = this.userCredentials;
+		this.userCredentials = userCredentials;
+		propertyChangeSupport.firePropertyChange("userCredentials",
+				oldUc, userCredentials);
+	}
 }
