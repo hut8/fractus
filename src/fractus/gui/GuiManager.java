@@ -1,16 +1,20 @@
 package fractus.gui;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 public class GuiManager {
 	private Display display;
 	private volatile boolean active;
+	
 	private CredentialsWindow credentialsWindow;
 	
 	public GuiManager() {
 		this.display = new Display();
-		this.credentialsWindow = new CredentialsWindow();
 		active = true;
+		
+		// Create windows
+		credentialsWindow = new CredentialsWindow();
 	}
 	
 	public void shutdown() {
@@ -21,10 +25,6 @@ public class GuiManager {
 		return this.display;
 	}
 	
-	public CredentialsWindow getCredentialsWindow() {
-		return this.credentialsWindow;
-	}
-	
     public void dispatchEvents() {
     	while (active) {
     		if (!display.readAndDispatch()) {
@@ -32,5 +32,18 @@ public class GuiManager {
     		}
     	}
     	display.dispose();
+    }
+    
+    /**
+     * 
+     */
+    public synchronized void showCredentials() {
+    	credentialsWindow.open();
+    }
+    
+    public static void main(String args[]) {
+    	GuiManager guiTest = new GuiManager();
+    	guiTest.showCredentials();
+    	guiTest.dispatchEvents();
     }
 }

@@ -13,8 +13,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.swt.widgets.Display;
 
-
-import fractus.gui.CredentialsWindow;
 import fractus.gui.GuiManager;
 import fractus.main.InterfaceManager.InterfaceType;
 import fractus.net.EncryptionManager;
@@ -42,6 +40,7 @@ public class Fractus {
 	private java.beans.PropertyChangeSupport propertyChangeSupport;
 	private KeyPublisher keyPublisher;
 	private RoutePublisher routePublisher;
+	private GuiManager guiManager;
 
 	public ContactManager getContactManager() {
 		return contactManager;
@@ -50,11 +49,13 @@ public class Fractus {
 	private Executor executor;
 	private String username;
 
-	public Fractus() throws
+	public Fractus(GuiManager guiManager) throws
 	IOException,
 	GeneralSecurityException,
 	ParserConfigurationException {
 		log.info("Fractus Client");
+		
+		this.guiManager = guiManager;
 
 		propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
 		executor = Executors.newFixedThreadPool(5);
@@ -96,17 +97,6 @@ public class Fractus {
 		return routeManager;
 	}
 
-
-
-	/**
-	 * @param args
-	 * @throws IOException s
-	 * @throws UnknownHostException
-	 * @throws NoSuchProviderException
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidAlgorithmParameterException
-	 * @throws ParserConfigurationException
-	 */
 	public static void main(String[] args)
 	throws UnknownHostException,
 	IOException,
@@ -115,28 +105,36 @@ public class Fractus {
 		PropertyConfigurator.configure("lib/log4j.properties");
 
 		// Determine interface type
-		InterfaceManager.InterfaceType interfaceType = InterfaceType.CLI;
+		InterfaceManager.InterfaceType interfaceType = InterfaceType.GUI;
 		if (args.length > 0) {
 			// Parse correct interface
 			if (args[0].equalsIgnoreCase("GUI")) {
 				interfaceType = InterfaceType.GUI;
 			} else if (args[0].equalsIgnoreCase("TUI")) {
 				interfaceType = InterfaceType.TUI;
-			} else if (args[0].equalsIgnoreCase("CLI")) {
-				interfaceType = InterfaceType.CLI;
 			}
 			else {
-				System.out.println("Invalid first argument (expecting interface: [GUI|TUI|CLI])");
+				System.out.println("Invalid first argument (expecting interface: [GUI|TUI])");
+				System.exit(-1);
 			}
 		}
+		
+		log.info("Using Interface Type: " + interfaceType.toString());
+		GuiManager guiManager = new GuiManager();
 		
 		// Create interface manager 
 
 		log.debug("Creating Fractus object");
-		Fractus fractus = new Fractus();
+		Fractus fractus = new Fractus(guiManager);
 		log.debug("Finished Fractus Constructor");
 		Thread routeThread = new Thread(fractus.routeManager);
 		routeThread.start();
+		
+		fractus.mainLoop();
+	}
+	
+	public void mainLoop() {
+		guiManager.dispatchEvents();
 	}
 
 	public void shutdown() {
