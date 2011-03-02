@@ -16,6 +16,8 @@ extends Window {
 
 	@Override
 	protected Control createContents(Composite parent) {
+		
+		
 		Label titleLabel = new Label(parent, SWT.HORIZONTAL | SWT.CENTER);
 		titleLabel.setText("Fractus Instant Messenger");
 		
@@ -29,7 +31,5 @@ extends Window {
 		serverLabel.setText("Server:");
 		
 		return parent;
-	}
-
-	
+	}	
 }
