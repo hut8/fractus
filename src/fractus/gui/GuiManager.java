@@ -1,49 +1,35 @@
 package fractus.gui;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import org.apache.log4j.Logger;
 
 public class GuiManager {
-	private Display display;
-	private volatile boolean active;
+	private static Logger log;
+	static {
+		log = Logger.getLogger(GuiManager.class.getName());
+	}
 	
-	private CredentialsWindow credentialsWindow;
+	private CredentialsFrame credentialsDialog;
 	
 	public GuiManager() {
-		this.display = new Display();
-		active = true;
+		credentialsDialog = new CredentialsFrame();
+	}
+	
+	public void main() {
+		String lafName = UIManager.getSystemLookAndFeelClassName();
+		try {
+			UIManager.setLookAndFeel(lafName);
+		} catch (Exception e) {
+			log.warn("Could not find native look and feel; reverting to cross-platform", e);
+		}
 		
-		// Create windows
-		credentialsWindow = new CredentialsWindow();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				// Display credentials dialog
+				
+			}
+		});
 	}
-	
-	public void shutdown() {
-		active = false;
-	}
-	
-	public Display getDisplay() {
-		return this.display;
-	}
-	
-    public void dispatchEvents() {
-    	while (active) {
-    		if (!display.readAndDispatch()) {
-    			display.sleep();
-    		}
-    	}
-    	display.dispose();
-    }
-    
-    /**
-     * 
-     */
-    public synchronized void showCredentials() {
-    	credentialsWindow.open();
-    }
-    
-    public static void main(String args[]) {
-    	GuiManager guiTest = new GuiManager();
-    	guiTest.showCredentials();
-    	guiTest.dispatchEvents();
-    }
 }

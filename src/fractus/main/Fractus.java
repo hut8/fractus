@@ -11,7 +11,6 @@ import java.util.concurrent.*;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.eclipse.swt.widgets.Display;
 
 import fractus.gui.GuiManager;
 import fractus.main.InterfaceManager.InterfaceType;
@@ -134,7 +133,7 @@ public class Fractus {
 	}
 	
 	public void mainLoop() {
-		guiManager.dispatchEvents();
+		guiManager.main();
 	}
 
 	public void shutdown() {
