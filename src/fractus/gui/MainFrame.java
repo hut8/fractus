@@ -21,6 +21,8 @@ import fractus.main.Fractus;
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 
 public class MainFrame extends JFrame {
 
@@ -43,6 +45,18 @@ public class MainFrame extends JFrame {
 	private JMenu contactsMenu = null;
 
 	private JMenuItem systemStatusMenuItem = null;
+
+	private JMenuItem addContactMenuItem = null;
+
+	private JMenuItem removeContactMenuItem = null;
+
+	private JCheckBoxMenuItem showOfflineContactsMenuItem = null;
+
+	private JMenu sortContactMenu = null;
+
+	private JRadioButtonMenuItem sortAlphabeticallyMenuItem = null;
+
+	private JRadioButtonMenuItem sortStatusMenuItem = null;
 
 	/**
 	 * This is the default constructor
@@ -271,6 +285,12 @@ public class MainFrame extends JFrame {
 		if (contactsMenu == null) {
 			contactsMenu = new JMenu();
 			contactsMenu.setText("Contacts");
+			contactsMenu.add(getAddContactMenuItem());
+			contactsMenu.add(getRemoveContactMenuItem());
+			contactsMenu.addSeparator();
+			contactsMenu.add(getShowOfflineContactsMenuItem());
+			contactsMenu.add(getSortContactMenu());
+			contactsMenu.addSeparator();
 		}
 		return contactsMenu;
 	}
@@ -286,6 +306,89 @@ public class MainFrame extends JFrame {
 			systemStatusMenuItem.setText("System Status...");
 		}
 		return systemStatusMenuItem;
+	}
+
+	/**
+	 * This method initializes addContactMenuItem	
+	 * 	
+	 * @return javax.swing.JMenuItem	
+	 */
+	private JMenuItem getAddContactMenuItem() {
+		if (addContactMenuItem == null) {
+			addContactMenuItem = new JMenuItem();
+			addContactMenuItem.setText("Add Contact");
+			addContactMenuItem.setIcon(new ImageIcon(getClass().getResource("/list-add-16.png")));
+		}
+		return addContactMenuItem;
+	}
+
+	/**
+	 * This method initializes removeContactMenuItem	
+	 * 	
+	 * @return javax.swing.JMenuItem	
+	 */
+	private JMenuItem getRemoveContactMenuItem() {
+		if (removeContactMenuItem == null) {
+			removeContactMenuItem = new JMenuItem();
+			removeContactMenuItem.setText("Remove Contact");
+			removeContactMenuItem.setIcon(new ImageIcon(getClass().getResource("/list-remove-16.png")));
+		}
+		return removeContactMenuItem;
+	}
+
+	/**
+	 * This method initializes showOfflineContactsMenuItem	
+	 * 	
+	 * @return javax.swing.JCheckBoxMenuItem	
+	 */
+	private JCheckBoxMenuItem getShowOfflineContactsMenuItem() {
+		if (showOfflineContactsMenuItem == null) {
+			showOfflineContactsMenuItem = new JCheckBoxMenuItem();
+			showOfflineContactsMenuItem.setText("Show offline contacts");
+			showOfflineContactsMenuItem.setSelected(true);
+		}
+		return showOfflineContactsMenuItem;
+	}
+
+	/**
+	 * This method initializes sortContactMenu	
+	 * 	
+	 * @return javax.swing.JMenu	
+	 */
+	private JMenu getSortContactMenu() {
+		if (sortContactMenu == null) {
+			sortContactMenu = new JMenu();
+			sortContactMenu.setText("Sort Contacts");
+			sortContactMenu.add(getSortAlphabeticallyMenuItem());
+			sortContactMenu.add(getSortStatusMenuItem());
+		}
+		return sortContactMenu;
+	}
+
+	/**
+	 * This method initializes sortAlphabeticallyMenuItem	
+	 * 	
+	 * @return javax.swing.JRadioButtonMenuItem	
+	 */
+	private JRadioButtonMenuItem getSortAlphabeticallyMenuItem() {
+		if (sortAlphabeticallyMenuItem == null) {
+			sortAlphabeticallyMenuItem = new JRadioButtonMenuItem();
+			sortAlphabeticallyMenuItem.setText("Alphabetically");
+		}
+		return sortAlphabeticallyMenuItem;
+	}
+
+	/**
+	 * This method initializes sortStatusMenuItem	
+	 * 	
+	 * @return javax.swing.JRadioButtonMenuItem	
+	 */
+	private JRadioButtonMenuItem getSortStatusMenuItem() {
+		if (sortStatusMenuItem == null) {
+			sortStatusMenuItem = new JRadioButtonMenuItem();
+			sortStatusMenuItem.setText("By Status");
+		}
+		return sortStatusMenuItem;
 	}
 
 }

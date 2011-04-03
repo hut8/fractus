@@ -3,7 +3,7 @@ GUI Plans
 =========
 Main Frame --
 -- Contacts menu
----- Add, remove contact
+---- Add, remove contact - Need to wire up
 ---- Sort contact by status, alphabetically
 ---- Show offline contacts?
 -- Each contact has status icon, 
@@ -15,6 +15,7 @@ Conversation Frame --
 
 System Status Frame --
 -- All connections' status in a scrollable table
+---- Columns: IP address, local port, remote port, 
 -- 
 
 Log frame --
