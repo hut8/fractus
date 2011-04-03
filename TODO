@@ -1,4 +1,18 @@
 
-Contact List Panel
--- Add, Remove contacts
--- Respond to contacts added remotely
+GUI Plans
+=========
+Main Frame --
+
+Conversation Frame --
+-- All conversations in one window for now
+-- One tab per conversation
+-- Simple conversation at top, entry textbox at bottom with sash between
+
+System Status Frame --
+-- All connections' status in a scrollable table
+-- 
+
+Log frame --
+-- Be able to filter by log level severity
+-- List each event in a sortable table
+---- Columns: severity icon, event (with tooltip), originator class, date/time

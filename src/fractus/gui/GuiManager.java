@@ -27,7 +27,7 @@ public class GuiManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				// Display credentials dialog
+				credentialsDialog.setVisible(true);
 				
 			}
 		});
