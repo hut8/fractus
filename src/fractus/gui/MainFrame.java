@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import fractus.main.Fractus;
 import javax.swing.ListSelectionModel;
@@ -38,6 +39,10 @@ public class MainFrame extends JFrame {
 	private JMenuItem exitMenuItem = null;
 	private JMenu helpMenu = null;
 	private JMenuItem aboutMenuItem = null;
+
+	private JMenu contactsMenu = null;
+
+	private JMenuItem systemStatusMenuItem = null;
 
 	/**
 	 * This is the default constructor
@@ -181,6 +186,7 @@ public class MainFrame extends JFrame {
 		if (mainMenuBar == null) {
 			mainMenuBar = new JMenuBar();
 			mainMenuBar.add(getFileMenu());
+			mainMenuBar.add(getContactsMenu());
 			mainMenuBar.add(getHelpMenu());
 		}
 		return mainMenuBar;
@@ -195,6 +201,7 @@ public class MainFrame extends JFrame {
 		if (fileMenu == null) {
 			fileMenu = new JMenu();
 			fileMenu.setText("File");
+			fileMenu.add(getSystemStatusMenuItem());
 			fileMenu.add(getExitMenuItem());
 		}
 		return fileMenu;
@@ -211,6 +218,12 @@ public class MainFrame extends JFrame {
 			exitMenuItem.setText("Exit");
 			exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
+					// Confirm choice
+					int choice = JOptionPane.showConfirmDialog(
+							MainFrame.this, "Are you sure you want to exit?",
+							"Exit Confirmation", JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.NO_OPTION) return;
+					
 					if (fractus != null) {
 						fractus.shutdown();
 					} else {
@@ -247,6 +260,32 @@ public class MainFrame extends JFrame {
 			aboutMenuItem.setText("About...");
 		}
 		return aboutMenuItem;
+	}
+
+	/**
+	 * This method initializes contactsMenu	
+	 * 	
+	 * @return javax.swing.JMenu	
+	 */
+	private JMenu getContactsMenu() {
+		if (contactsMenu == null) {
+			contactsMenu = new JMenu();
+			contactsMenu.setText("Contacts");
+		}
+		return contactsMenu;
+	}
+
+	/**
+	 * This method initializes systemStatusMenuItem	
+	 * 	
+	 * @return javax.swing.JMenuItem	
+	 */
+	private JMenuItem getSystemStatusMenuItem() {
+		if (systemStatusMenuItem == null) {
+			systemStatusMenuItem = new JMenuItem();
+			systemStatusMenuItem.setText("System Status...");
+		}
+		return systemStatusMenuItem;
 	}
 
 }

@@ -2,6 +2,11 @@
 GUI Plans
 =========
 Main Frame --
+-- Contacts menu
+---- Add, remove contact
+---- Sort contact by status, alphabetically
+---- Show offline contacts?
+-- Each contact has status icon, 
 
 Conversation Frame --
 -- All conversations in one window for now
