@@ -4,8 +4,8 @@ GUI Plans
 Main Frame --
 -- Contacts menu
 ---- Add, remove contact - Need to wire up
----- Sort contact by status, alphabetically
----- Show offline contacts?
+---- Sort contact by status, alphabetically -- make work
+---- Show offline contacts? -- remember
 -- Each contact has status icon, 
 
 Conversation Frame --

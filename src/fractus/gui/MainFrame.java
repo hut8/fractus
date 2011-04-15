@@ -187,6 +187,12 @@ public class MainFrame extends JFrame {
 			addContactButton.setIcon(new ImageIcon(getClass().getResource("/list-add.png")));
 			addContactButton.setHorizontalAlignment(SwingConstants.TRAILING);
 			addContactButton.setToolTipText("Add Contact...");
+			addContactButton.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					// Prompt for name of new contact
+					// TODO
+				}
+			});
 		}
 		return addContactButton;
 	}

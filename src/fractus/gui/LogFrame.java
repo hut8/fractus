@@ -7,6 +7,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.GridBagLayout;
+import javax.swing.JComboBox;
+import java.awt.GridBagConstraints;
+import javax.swing.JLabel;
+import java.awt.Insets;
 
 public class LogFrame extends JFrame {
 
@@ -15,6 +19,8 @@ public class LogFrame extends JFrame {
 	private JScrollPane logScrollPane = null;
 	private JTable logTable = null;
 	private JPanel filterPanel = null;
+	private JComboBox logLevelComboBox = null;
+	private JLabel logLevelLabel = null;
 
 	/**
 	 * This is the default constructor
@@ -82,10 +88,31 @@ public class LogFrame extends JFrame {
 	 */
 	private JPanel getFilterPanel() {
 		if (filterPanel == null) {
+			logLevelLabel = new JLabel();
+			logLevelLabel.setText("Minimum Level:");
+			GridBagConstraints gridBagConstraints = new GridBagConstraints();
+			gridBagConstraints.fill = GridBagConstraints.VERTICAL;
+			gridBagConstraints.anchor = GridBagConstraints.WEST;
+			gridBagConstraints.insets = new Insets(0, 7, 0, 0);
+			gridBagConstraints.weightx = 1.0;
 			filterPanel = new JPanel();
 			filterPanel.setLayout(new GridBagLayout());
+			filterPanel.add(logLevelLabel, new GridBagConstraints());
+			filterPanel.add(getLogLevelComboBox(), gridBagConstraints);
 		}
 		return filterPanel;
+	}
+
+	/**
+	 * This method initializes logLevelComboBox	
+	 * 	
+	 * @return javax.swing.JComboBox	
+	 */
+	private JComboBox getLogLevelComboBox() {
+		if (logLevelComboBox == null) {
+			logLevelComboBox = new JComboBox();
+		}
+		return logLevelComboBox;
 	}
 
 }

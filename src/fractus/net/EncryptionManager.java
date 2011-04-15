@@ -39,13 +39,17 @@ import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.util.encoders.Base64;
 
+import fractus.main.ECDHKeyGenerator;
+
 
 public class EncryptionManager {
 
-    private static final String ELLIPTIC_CURVE = "secp521r1";
-    private KeyPair keyPair;
+    public static final String ELLIPTIC_CURVE = "secp521r1";
+    private KeyPair dhKeyPair;
+    private KeyPair dsaKeyPair;
     private String encodingType;
-    private String encodedKey;
+    private String encodedDsaPublicKey;
+    private String encodedDhPublicKey;
     private ECDHBasicAgreement agreement;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
@@ -77,13 +81,12 @@ public class EncryptionManager {
 
     public void initialize(Executor c) {
         c.execute(new Runnable() {
-
             @Override
             public void run() {
                 Provider provider = new org.bouncycastle.jce.provider.BouncyCastleProvider();
                 Security.addProvider(provider);
                 try {
-                    keyPair = generateKeyPair();
+                    dhKeyPair = ECDHKeyGenerator.generateECDHKeyPair();
                     generateFields();
                     propertyChangeSupport.firePropertyChange("keyPairReady", false, true);
                 } catch (GeneralSecurityException e) {
@@ -103,20 +106,20 @@ public class EncryptionManager {
             GeneralSecurityException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(keyfile));
-        keyPair = (KeyPair) ois.readObject();
+        dhKeyPair = (KeyPair) ois.readObject();
         generateFields();
     }
 
     private void generateFields()
             throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Base64.encode(keyPair.getPublic().getEncoded(), baos);
+        Base64.encode(dhKeyPair.getPublic().getEncoded(), baos);
 
-        encodedKey = baos.toString("UTF-8");
-        encodingType = keyPair.getPublic().getFormat();
+        encodedDsaPublicKey = baos.toString("UTF-8");
+        encodingType = dhKeyPair.getPublic().getFormat();
 
         // Reference Private Key
-        ECPrivateKey privKey = (ECPrivateKey) keyPair.getPrivate();
+        ECPrivateKey privKey = (ECPrivateKey) dhKeyPair.getPrivate();
 
         // Initialize ECDH
         agreement = new ECDHBasicAgreement();
@@ -127,7 +130,7 @@ public class EncryptionManager {
     }
 
     public byte[] getPublicKey() {
-        return keyPair.getPublic().getEncoded();
+        return dhKeyPair.getPublic().getEncoded();
     }
 
     public SecretKeySpec deriveKey(CipherParameters cp) {
@@ -145,31 +148,12 @@ public class EncryptionManager {
         return new SecretKeySpec(hash, 0, hash.length, "AES");
     }
 
-    public static KeyPair generateKeyPair() throws
-            GeneralSecurityException {
-        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec(ELLIPTIC_CURVE);
-        KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "BC");
-        g.initialize(ecSpec, new SecureRandom());
-        return g.generateKeyPair();
-    }
-
-    public static void generateKey(String filename) throws
-            GeneralSecurityException,
-            FileNotFoundException,
-            IOException {
-        KeyPair pair = generateKeyPair();
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
-        oos.writeObject(pair);
-        oos.flush();
-        oos.close();
-    }
-
     public String getEncodingFormat() {
         return encodingType;
     }
 
     public String getEncodedKey() {
-        return encodedKey;
+        return encodedDsaPublicKey;
     }
 
     public SecretKeySpec deriveKey(ECPublicKey pubkey) {

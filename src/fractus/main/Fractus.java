@@ -129,10 +129,6 @@ public class Fractus {
 		Thread routeThread = new Thread(fractus.routeManager);
 		routeThread.start();
 		
-		fractus.mainLoop();
-	}
-	
-	public void mainLoop() {
 		guiManager.main();
 	}
 
