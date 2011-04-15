@@ -40,9 +40,8 @@ public class RouteManager
         log = Logger.getLogger(RouteManager.class.getName());
     }
 
-    public RouteManager(EncryptionManager encryptionManager,
-            PacketHandler packetHandler) {
-        this.encryptionManager = encryptionManager;
+    public RouteManager(PacketHandler packetHandler) {
+        this.encryptionManager = EncryptionManager.getInstance();
         this.packetHandler = packetHandler;
         established = false;
     }

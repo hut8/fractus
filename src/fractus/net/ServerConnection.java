@@ -39,12 +39,10 @@ public class ServerConnection
         log = Logger.getLogger(ServerConnection.class.getName());
     }
 
-    public ServerConnection(String hostname,
-            Integer port,
-            EncryptionManager em) {
+    public ServerConnection(String hostname, Integer port) {
         this.hostname = hostname;
         this.port = port;
-        this.em = em;
+        this.em = EncryptionManager.getInstance();
         messsageQueue = new ConcurrentLinkedQueue<FractusMessage>();
         signOnDelegate = new Delegate<DelegateMethod<EventData>, EventData>();
     }

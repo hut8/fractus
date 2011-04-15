@@ -29,7 +29,6 @@ public class Fractus {
 	static {
 		log = Logger.getLogger(Fractus.class.getName());
 	}
-	private EncryptionManager encryptionManager;
 	private PacketHandler packetHandler;
 	private PublicKeyDirectory publicKeyDirectory;
 	private RouteManager routeManager;
@@ -58,15 +57,14 @@ public class Fractus {
 
 		propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
 		executor = Executors.newFixedThreadPool(5);
-		log.debug("Creating Encryption Manager");
-		encryptionManager = new EncryptionManager();
-		encryptionManager.initialize(executor);
+		log.debug("Initializing Encryption Manager");
+		EncryptionManager.getInstance().initialize(executor);
 
 		log.debug("Creating Contact Manager");
-		contactManager = new ContactManager(encryptionManager, packetHandler, publicKeyDirectory);
+		contactManager = new ContactManager(packetHandler, publicKeyDirectory);
 
 		log.debug("Creating Route Manager");
-		routeManager = new RouteManager(encryptionManager, packetHandler);
+		routeManager = new RouteManager(packetHandler);
 
 		ShutdownProcedure sh = new ShutdownProcedure(routeManager.getNetListener(), serverConnection);
 		Runtime.getRuntime().addShutdownHook(sh);
@@ -82,10 +80,6 @@ public class Fractus {
 
 	public PacketHandler getPacketHandler() {
 		return packetHandler;
-	}
-
-	public EncryptionManager getEncryptionManager() {
-		return encryptionManager;
 	}
 
 	public ServerConnection getServerConnection() {
@@ -138,7 +132,7 @@ public class Fractus {
 
 	public void createServerConnection(String serverAddress, Integer port) {
 		log.debug("Creating server connector");
-		this.serverConnection = new ServerConnection(serverAddress, port, encryptionManager);
+		this.serverConnection = new ServerConnection(serverAddress, port);
 		log.debug("Creating Server Connection Thread");
 		new Thread(serverConnection, "ServerConnection").start();
 		publicKeyDirectory = new PublicKeyDirectory(serverConnection);

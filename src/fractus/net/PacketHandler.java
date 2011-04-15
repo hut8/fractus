@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
-public class PacketHandler {
+public class PacketHandler {	
     private static Logger log = Logger.getLogger(PacketHandler.class.getName());
     private Map<MessageDescriptor, PacketStrategy> strategyMap;
 	

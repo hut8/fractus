@@ -35,12 +35,11 @@ public class ContactManager {
 	private Delegate<DelegateMethod<AddContactEventData>, AddContactEventData> addContactDelegate;
 	private Delegate<DelegateMethod<EventData>, EventData> isValidDelegate;
 
-	public ContactManager(EncryptionManager encryptionManager,
-			PacketHandler packetHandler,
+	public ContactManager(PacketHandler packetHandler,
 			PublicKeyDirectory publicKeyDirectory) {
 		log = Logger.getLogger(this.getClass().getName());
 
-		this.encryptionManager = encryptionManager;
+		this.encryptionManager = EncryptionManager.getInstance();
 		this.packetHandler = packetHandler;
 		this.publicKeyDirectory = publicKeyDirectory;
 

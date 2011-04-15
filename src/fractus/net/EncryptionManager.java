@@ -43,19 +43,24 @@ import fractus.main.ECDHKeyGenerator;
 
 
 public class EncryptionManager {
+	
+	private static EncryptionManager instance = new EncryptionManager();
+	public static EncryptionManager getInstance() {
+		return instance;
+	}
 
     public static final String ELLIPTIC_CURVE = "secp521r1";
-    private KeyPair dhKeyPair;
     private KeyPair dsaKeyPair;
+    private KeyPair dhKeyPair;
     private String encodingType;
     private String encodedDsaPublicKey;
     private String encodedDhPublicKey;
     private ECDHBasicAgreement agreement;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-    public EncryptionManager() {
+    private EncryptionManager() {
     }
-
+    
     /**
      * Add PropertyChangeListener.
      *
