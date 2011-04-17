@@ -6,4 +6,7 @@ public class FractusCertificate {
 	private PublicKey publicKey;
 	private PublicKey serverPublicKey;
 	
+	
+	//private Set<FractusCertificate> 
+	
 }

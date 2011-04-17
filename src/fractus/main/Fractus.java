@@ -47,13 +47,11 @@ public class Fractus {
 	private Executor executor;
 	private String username;
 
-	public Fractus(GuiManager guiManager) throws
+	public Fractus() throws
 	IOException,
 	GeneralSecurityException,
 	ParserConfigurationException {
 		log.info("Fractus Client");
-		
-		this.guiManager = guiManager;
 
 		propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
 		executor = Executors.newFixedThreadPool(5);
