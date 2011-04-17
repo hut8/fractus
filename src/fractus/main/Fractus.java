@@ -109,19 +109,14 @@ public class Fractus {
 				System.exit(-1);
 			}
 		}
-		
-		log.info("Using Interface Type: " + interfaceType.toString());
-		GuiManager guiManager = new GuiManager();
-		
-		// Create interface manager 
 
 		log.debug("Creating Fractus object");
-		Fractus fractus = new Fractus(guiManager);
+		Fractus fractus = new Fractus();
 		log.debug("Finished Fractus Constructor");
 		Thread routeThread = new Thread(fractus.routeManager);
 		routeThread.start();
 		
-		guiManager.main();
+		GuiManager.getInstance().main();
 	}
 
 	public void shutdown() {

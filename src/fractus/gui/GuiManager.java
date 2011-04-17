@@ -5,14 +5,23 @@ import javax.swing.UIManager;
 import org.apache.log4j.Logger;
 
 public class GuiManager {
+	
+	// Singleton
+	private static GuiManager instance = new GuiManager();
+	public static GuiManager getInstance() {
+		return instance;
+	}
+	
+	// Log
 	private static Logger log;
 	static {
 		log = Logger.getLogger(GuiManager.class.getName());
 	}
 	
+	// Frame instances
 	private CredentialsFrame credentialsDialog;
 	
-	public GuiManager() {
+	private GuiManager() {
 		credentialsDialog = new CredentialsFrame();
 	}
 	
@@ -28,7 +37,6 @@ public class GuiManager {
 			@Override
 			public void run() {
 				credentialsDialog.setVisible(true);
-				
 			}
 		});
 	}
