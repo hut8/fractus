@@ -9,13 +9,10 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.log4j.Logger;
+import org.bouncycastle.crypto.modes.GCMBlockCipher;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import org.bouncycastle.math.ec.ECPoint;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author bowenl2
@@ -23,21 +20,9 @@ import org.bouncycastle.math.ec.ECPoint;
 public class ClientCipher {
 
     private boolean initialized;
-
-    /**
-     * Get the value of initialized
-     *
-     * @return the value of initialized
-     */
     public boolean isInitialized() {
         return initialized;
     }
-
-    /**
-     * Set the value of initialized
-     *
-     * @param initialized new value of initialized
-     */
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
     }
@@ -45,21 +30,24 @@ public class ClientCipher {
     private ECPoint remotePublicPoint;
     private ECPublicKey remotePublicKey;
     private SecretKeySpec secretKeySpec;
-    private Cipher encryptCipher;
-    private Cipher decryptCipher;
+    
+    // AES-GCM
+    private GCMBlockCipher encryptCipher;
+    private byte[] encryptNonce;
+    private GCMBlockCipher decryptCipher;
+    private byte[] decryptNonce;
+    
     private static Logger log;
-    private EncryptionManager encryptionManager;
 
     static {
         log = Logger.getLogger(ClientCipher.class.getName());
     }
 
-    public ClientCipher(EncryptionManager encryptionManager) {
+    public ClientCipher() {
         this.initialized = false;
-        this.encryptionManager = encryptionManager;
     }
 
-    public void negotiate(String keyEncoding, byte[] remotePublicKey)
+    public void negotiate(String keyEncoding, byte[] remotePublicKey, byte[] remoteNonce)
     throws GeneralSecurityException {
                 if (!"X.509".equals(keyEncoding)) {
             log.warn("Could not recognize that key encoding [Not X.509]: " + keyEncoding);
@@ -81,13 +69,13 @@ public class ClientCipher {
         this.remotePublicPoint = this.remotePublicKey.getQ();
 
         // Extract CipherParameters
-        this.secretKeySpec = encryptionManager.deriveKey(this.remotePublicKey);
+        this.secretKeySpec = EncryptionManager.getInstance().deriveKey(this.remotePublicKey);
 
-        encryptCipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+        // TODO Create ParametersWithIV
+        
+        // TODO Create Encryption Cipher
+        // TODO Create Decryption Cipher
 
-        decryptCipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC");
-        decryptCipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
 
         initialized = true;
     }

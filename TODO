@@ -1,4 +1,47 @@
 
+Todo
+====
+Server
+------
+Compile new protocol buffer class
+
+
+* Implement CA in database
+* Try to find old SQL script with stored procedures written
+
+
+
+Cryptography plans
+==================
+
+
+
+AES-GCM for symmetric crypto, authentication of same
+
+
+TLS doesn't work because:
+*	No implementation for TLS 1.2, which is required for AES-GCM (Suite B)
+*	No implementation for web of trust without RFC 6091
+*	Client / Server would go against own protocol
+
+
+Nothing below this line makes sense
+-----------------------------------
+TLS Now -
+--	Create self-signed X.509 certificate generator for FractusServer 
+--	Create CA infrastructure in FractusServer 
+
+
+TLS (future) -
+--	during handshake, the client generates a random number and sends it to the server to establish
+	a session key.  Why not use DH?  Just so that the secret changes between sessions, right?
+--	How to disable renegotiation to stop August 2009 attack
+--  Client/Server - how to work with just peers?  Can the originating peer just act as a client
+	and the other peer as the server?
+--  http://tools.ietf.org/html/rfc5246 <-- TLS
+    http://tools.ietf.org/html/rfc6091 <-- using OpenPGP certificates
+	  
+
 GUI Plans
 =========
 Main Frame --

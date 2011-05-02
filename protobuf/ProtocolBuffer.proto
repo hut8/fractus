@@ -2,7 +2,7 @@
 option java_package = "fractus.net";
 
 message InstantMessage {
-    required string contents = 1;
+	required string contents = 1;
 }
 
 message ClientInfo {
@@ -31,13 +31,28 @@ message ContactDataRes {
   repeated ContactData contact_data = 2;
 }
 
-////////////////////
-// Key Management //
-////////////////////
+message ProtocolError {
+	required int32 code = 1;
+}
 
-message PublicKey {
-    required string encoding = 1;
-    required bytes public_key = 2;
+message CipherCapabilities {
+	repeated CipherSuite cipher_suites = 1;
+}
+
+message CipherSuite {
+	optional string public_key_type = 1;
+	optional string secret_establishment_algorithm = 2;
+	optional string key_derivation_function = 3;
+	optional string cipher_algorithm = 4;
+	optional string cipher_mode = 5;
+	optional int32 cipher_key_size = 6;
+}
+
+message HandshakeData {
+	optional string public_key_encoding = 1;
+    optional bytes public_key = 2;
+    optional bytes nonce = 3;
+    optional string certificate_authority = 4;
 }
 
 // Key registration
@@ -75,7 +90,7 @@ message IdentifyKeyRes {
   optional string username = 2;
 }
 
-// Key revocation (sign-off)
+// Key revocation
 
 message RevokeKeyReq {
 

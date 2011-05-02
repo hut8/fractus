@@ -3,20 +3,18 @@ package fractus.main;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import fractus.gui.GuiManager;
-import fractus.main.InterfaceManager.InterfaceType;
 import fractus.net.EncryptionManager;
-import fractus.net.PacketHandler;
 import fractus.net.KeyPublisher;
+import fractus.net.PacketHandler;
 import fractus.net.PublicKeyDirectory;
 import fractus.net.RouteManager;
 import fractus.net.RoutePublisher;
@@ -36,16 +34,13 @@ public class Fractus {
 	private ContactManager contactManager;
 	private UserCredentials userCredentials;
 	private java.beans.PropertyChangeSupport propertyChangeSupport;
-	private KeyPublisher keyPublisher;
 	private RoutePublisher routePublisher;
 	private GuiManager guiManager;
 
 	public ContactManager getContactManager() {
 		return contactManager;
 	}
-	public static final String version = "Fractus 0.3b";
 	private Executor executor;
-	private String username;
 
 	public Fractus() throws
 	IOException,
@@ -95,21 +90,6 @@ public class Fractus {
 	ParserConfigurationException {
 		PropertyConfigurator.configure("lib/log4j.properties");
 
-		// Determine interface type
-		InterfaceManager.InterfaceType interfaceType = InterfaceType.GUI;
-		if (args.length > 0) {
-			// Parse correct interface
-			if (args[0].equalsIgnoreCase("GUI")) {
-				interfaceType = InterfaceType.GUI;
-			} else if (args[0].equalsIgnoreCase("TUI")) {
-				interfaceType = InterfaceType.TUI;
-			}
-			else {
-				System.out.println("Invalid first argument (expecting interface: [GUI|TUI])");
-				System.exit(-1);
-			}
-		}
-
 		log.debug("Creating Fractus object");
 		Fractus fractus = new Fractus();
 		log.debug("Finished Fractus Constructor");
@@ -127,15 +107,9 @@ public class Fractus {
 		log.debug("Creating server connector");
 		this.serverConnection = new ServerConnection(serverAddress, port);
 		log.debug("Creating Server Connection Thread");
-		new Thread(serverConnection, "ServerConnection").start();
+		new Thread(serverConnection, "Server Connection").start();
 		publicKeyDirectory = new PublicKeyDirectory(serverConnection);
 		packetHandler = new PacketHandler();
-		createKeyPublisher();
-	}
-
-	private void createKeyPublisher() {
-		keyPublisher = new KeyPublisher(userCredentials, serverConnection);
-		new Thread(keyPublisher, "Key Publisher").start();
 	}
 
 	public void createCredentials(String username, String password) {
