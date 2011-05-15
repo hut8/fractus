@@ -1,29 +1,68 @@
 
 Todo
 ====
+Web
+---
+-- Choose framework
+Master page template
+Install server (Tomcat?)
+Create account
+Delete account
+Password reset mechanism
+Download page
+Link to documentation and Github
+History of logins
+Geo IP DB (later)
+Statistics: Registered users, online locations
+
 Server
 ------
-Compile new protocol buffer class
+Database Unit tests
 
+
+Database Interface:
+	Authenticator
+		Authenticate
+			Store SHA256+SALT, not like now.
+		> AddUser
+		> DeleteUser
+	ContactTracker
+		AddContact
+		DeleteContact
+		FindNonreciprocalContacts
+		GetUserContactData (with locations)
+	UserTracker
+		RegisterLocation
+		DeleteLocation
+		
+
+Update MessageDescriptor when needed
+FractusConnector
+FractusConnectorTest
+Rename PublicKeyStrategy
+Add code to FractusConnector for disconnecting with ProtocolError code
+CipherCapabilitiesStrategy
+CipherCapabilitiesStrategyTest
+HandshakeStrategy
+HandshakeStrategyTest
+
+
+Done
+----
+-- Make ClientCipher test
+-- Finish ClientCipher
+-- Finish Nonce
+-- Make Nonce test
 
 * Implement CA in database
 * Try to find old SQL script with stored procedures written
 
-
-
 Cryptography plans
 ==================
-
-
-
-AES-GCM for symmetric crypto, authentication of same
-
-
 TLS doesn't work because:
 *	No implementation for TLS 1.2, which is required for AES-GCM (Suite B)
 *	No implementation for web of trust without RFC 6091
 *	Client / Server would go against own protocol
-
 
 Nothing below this line makes sense
 -----------------------------------
