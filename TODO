@@ -1,6 +1,48 @@
 
 Todo
 ====
+Server
+------
+Database Unit tests
+
+Database Interface:
+	>AccountData
+		>GetAccountData
+	ContactTracker
+		AddContact
+		DeleteContact
+		FindNonreciprocalContacts
+		GetUserContactData (with locations)
+	UserTracker
+		RegisterLocation
+		DeleteLocation
+
+Tests:
+	All Database
+	Strategies:
+		AddContactReqStrategy
+		CipherCapabilitiesStrategy
+		ContactDataReqStrategy
+		HandshakeDataStrategy
+		IdentifyKeyReqStrategy
+		PendingContactReqStrategy
+		RegisterKeyReqStrategy
+		RevokeKeyReqStrategy
+		UnregisterLocationStrategy
+		RegisterLocationStrategy
+		
+		
+Update MessageDescriptor when needed
+FractusConnector
+FractusConnectorTest
+Rename PublicKeyStrategy
+Add code to FractusConnector for disconnecting with ProtocolError code
+CipherCapabilitiesStrategy
+CipherCapabilitiesStrategyTest
+HandshakeStrategy
+HandshakeStrategyTest
+
+
 Web
 ---
 -- Choose framework
@@ -15,36 +57,10 @@ History of logins
 Geo IP DB (later)
 Statistics: Registered users, online locations
 
-Server
-------
-Database Unit tests
 
 
-Database Interface:
-	Authenticator
-		Authenticate
-			Store SHA256+SALT, not like now.
-		> AddUser
-		> DeleteUser
-	ContactTracker
-		AddContact
-		DeleteContact
-		FindNonreciprocalContacts
-		GetUserContactData (with locations)
-	UserTracker
-		RegisterLocation
-		DeleteLocation
-		
 
-Update MessageDescriptor when needed
-FractusConnector
-FractusConnectorTest
-Rename PublicKeyStrategy
-Add code to FractusConnector for disconnecting with ProtocolError code
-CipherCapabilitiesStrategy
-CipherCapabilitiesStrategyTest
-HandshakeStrategy
-HandshakeStrategyTest
+
 
 
 Done

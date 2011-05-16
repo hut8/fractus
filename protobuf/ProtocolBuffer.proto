@@ -122,10 +122,35 @@ message RegisterLocationRes {
   enum ResponseCode {
     SUCCESS = 0;
     AUTHORIZATION_FAILURE = 1;
-    DUPLICATE_KEY = 2;
-    INTERNAL_ERROR = 3;
+    REDUNDANT_REQUEST = 2;
+    INVALID_REQUEST = 3;
+    INTERNAL_ERROR = 4;
   }
-  required ResponseCode code = 1;
+  message ResponseMessage {
+  	required ResponseCode code = 1;
+  	required Location location = 2;
+  }
+  repeated ResponseMessage response_list = 1;
+}
+
+
+message UnregisterLocationReq {
+    repeated Location location_list = 1;
+}
+
+message UnregisterLocationRes {
+  enum ResponseCode {
+    SUCCESS = 0;
+    AUTHORIZATION_FAILURE = 1;
+    REDUNDANT_REQUEST = 2;
+    INVALID_REQUEST = 3;
+    INTERNAL_ERROR = 4;
+  }
+  message ResponseMessage {
+  	required ResponseCode code = 1;
+  	required Location location = 2;
+  }
+  repeated ResponseMessage response_list = 1;
 }
 
 //////////////
