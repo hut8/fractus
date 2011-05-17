@@ -1,6 +1,7 @@
-package fractus.main;
+package fractus.delegate;
 
 import java.security.Provider;
+
 
 public class AddProviderEventData extends EventData {
 	private Provider provider;

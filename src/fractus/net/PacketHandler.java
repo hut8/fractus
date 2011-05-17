@@ -1,7 +1,6 @@
 package fractus.net;
 
 import fractus.strategy.PacketStrategy;
-import fractus.main.BinaryUtil;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
-public class PacketHandler {	
+public class PacketHandler {
     private static Logger log = Logger.getLogger(PacketHandler.class.getName());
     private Map<MessageDescriptor, PacketStrategy> strategyMap;
 	
@@ -18,14 +17,22 @@ public class PacketHandler {
         strategyMap = new HashMap<MessageDescriptor, PacketStrategy>();
     }
 
-    public synchronized void register(MessageDescriptor md, PacketStrategy s) {
-        log.debug("Registering descriptor strategy: " + md.getName() + " to: " + s.toString());
-        strategyMap.put(md, s);
+    public synchronized void register(MessageDescriptor messageDescriptor, PacketStrategy s) {
+        log.debug("Registering descriptor strategy: " + messageDescriptor.getName() + " to: " + s.toString());
+        strategyMap.put(messageDescriptor, s);
     }
 
-    public synchronized void handle(FractusPacket packet) {
-        log.debug("Handling packet of [" + packet.getContents().length + " B]");
-        ByteArrayInputStream bais = new ByteArrayInputStream(packet.getContents());
+    public synchronized void unregister(MessageDescriptor messageDescriptor) {
+    	strategyMap.remove(messageDescriptor);
+    }
+    
+    
+    /**
+     * Handles contents of packet once decrypted
+     * @param packetContents
+     */
+    public synchronized void handle(byte[] packetContents) {
+        ByteArrayInputStream bais = new ByteArrayInputStream(packetContents);
 
         // Determine MessageDescriptor
         DataInputStream dis = new DataInputStream(bais);
@@ -44,6 +51,7 @@ public class PacketHandler {
         }
         PacketStrategy strategy = strategyMap.get(descriptor);
 
+
         // Get rest of message contents
         byte[] messageData = new byte[bais.available()];
         try {
@@ -53,9 +61,7 @@ public class PacketHandler {
             return;
         }
 
-        log.debug("Message Data:" + BinaryUtil.encodeData(messageData));
-        log.debug("Dispatching message contents [" + messageData.length + " B] to strategy object: " + strategy.toString());
-        
+        log.debug("Dispatching message contents [" + messageData.length + "] to strategy object: " + strategy.toString());
         strategy.dispatch(messageData);
     }
 }

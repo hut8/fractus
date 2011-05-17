@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fractus.net;
 
 /**
@@ -11,11 +6,11 @@ package fractus.net;
  */
 public class RoutePublisher
     implements Runnable {
-    private RouteManager routeManager;
-    private ServerConnection serverConnection;
+    //private RouteManager routeManager;
+    private ServerConnector serverConnection;
 
-    public RoutePublisher(RouteManager routeManager, ServerConnection serverConnection) {
-        this.routeManager = routeManager;
+    public RoutePublisher(IncomingRoute incomingRoute, ServerConnector serverConnection) {
+        //this.routeManager = routeManager;
         this.serverConnection = serverConnection;
     }
 

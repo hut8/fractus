@@ -8,7 +8,7 @@ package fractus.strategy;
 import com.google.protobuf.InvalidProtocolBufferException;
 import fractus.net.ProtocolBuffer;
 import fractus.net.ProtocolBuffer.RegisterKeyRes.ResponseCode;
-import fractus.net.ServerConnection;
+import fractus.net.ServerConnector;
 import javax.swing.JDialog;
 import org.apache.log4j.Logger;
 
@@ -19,11 +19,11 @@ import org.apache.log4j.Logger;
  */
 public class RegisterKeyResStrategy
 implements PacketStrategy {
-    private ServerConnection serverConnection;
+    private ServerConnector serverConnection;
 
     private static Logger log = Logger.getLogger(RegisterKeyResStrategy.class.getName());
 
-    public RegisterKeyResStrategy(ServerConnection serverConnection) {
+    public RegisterKeyResStrategy(ServerConnector serverConnection) {
         this.serverConnection = serverConnection;
     }
 

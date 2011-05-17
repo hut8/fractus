@@ -1,6 +1,7 @@
-package fractus.main;
+package fractus.delegate;
 
 import java.util.HashSet;
+
 
 public class Delegate<T extends DelegateMethod<TData>, TData extends EventData> {
 	private HashSet<T> targets;

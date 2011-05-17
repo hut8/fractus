@@ -1,4 +1,6 @@
-package fractus.main;
+package fractus.delegate;
+
+import fractus.main.Contact;
 
 public class ContactStatusEventData extends EventData {
 	private Contact contact;

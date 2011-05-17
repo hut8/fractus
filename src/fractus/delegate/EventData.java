@@ -1,4 +1,4 @@
-package fractus.main;
+package fractus.delegate;
 
 public class EventData {
 

@@ -20,6 +20,7 @@ public class GuiManager {
 	
 	// Frame instances
 	private CredentialsFrame credentialsDialog;
+	private MainFrame mainFrame;
 	
 	private GuiManager() {
 		credentialsDialog = new CredentialsFrame();

@@ -7,31 +7,29 @@ import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Element;
-import fractus.net.EncryptionManager;
+
+import fractus.crypto.PublicKeyDirectory;
+import fractus.delegate.ContactStatusEventData;
+import fractus.delegate.Delegate;
+import fractus.delegate.DelegateMethod;
+import fractus.delegate.IncomingMessageEventData;
 import fractus.net.PacketHandler;
 
 import fractus.net.FractusPacket;
 import fractus.net.LocationManager;
 import fractus.net.ProtocolBuffer;
-import fractus.net.PublicKeyDirectory;
 
 public class Contact {
-
     private String username;
-    private boolean online = false;
-    private LocationManager lm;
-    private Delegate<DelegateMethod<IncomingMessageEventData>, IncomingMessageEventData> incomingMessageDelegate;
-    private Delegate<DelegateMethod<ContactStatusEventData>, ContactStatusEventData> statusChangeDelegate;
-    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
-    public Contact(String username,
-            EncryptionManager encryptionManager,
-            PacketHandler packetHandler,
-            PublicKeyDirectory publicKeyDirectory) {
+    private boolean online;
+    private LocationManager locationManager;
+    private PropertyChangeSupport propertyChangeSupport;
+    
+    public Contact(String username) {
         this.username = username;
-        lm = new LocationManager(encryptionManager, packetHandler, publicKeyDirectory);
-        online = false;
-        propertyChangeSupport = new PropertyChangeSupport(this);
+        this.locationManager = new LocationManager();
+        this.online = false;
+        this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     public void signOn() {
@@ -49,13 +47,11 @@ public class Contact {
     }
 
     public void sendMessage(String message) {
-        byte[] serialMessage = ProtocolBuffer.InstantMessage.newBuilder()
-                .setContents(message).build().toByteArray();
-        lm.sendPacket(new FractusPacket(serialMessage));
+    	
     }
 
     public void receiveMessage(String message) {
-        incomingMessageDelegate.invoke(new IncomingMessageEventData(this, message));
+    	
     }
 
     public boolean isOnline() {
@@ -63,11 +59,7 @@ public class Contact {
     }
 
     public LocationManager getLocationManager() {
-        return lm;
-    }
-
-    public void addLocation(String address, int port) {
-        lm.addConnection(address, port);
+        return locationManager;
     }
 
     public void addPropertyChangeListener(String propertyName,

@@ -1,4 +1,5 @@
-package fractus.main;
+package fractus.delegate;
+
 
 public class ClientConnectionEventData extends EventData {
 

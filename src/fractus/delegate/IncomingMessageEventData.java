@@ -1,4 +1,6 @@
-package fractus.main;
+package fractus.delegate;
+
+import fractus.main.Contact;
 
 public class IncomingMessageEventData extends EventData {
 	private Contact contact;

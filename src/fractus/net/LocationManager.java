@@ -8,6 +8,8 @@ import java.util.*;
 import javax.crypto.NoSuchPaddingException;
 import org.apache.log4j.Logger;
 
+import fractus.crypto.PublicKeyDirectory;
+
 
 
 /**
@@ -16,30 +18,16 @@ import org.apache.log4j.Logger;
  */
 
 public class LocationManager {
-	private EncryptionManager encryptionManager;
-        private PacketHandler packetHandler;
-        private PublicKeyDirectory publicKeyDirectory;
-        final private HashSet<FractusConnector> connections;
+	final private Set<FractusConnector> connections;
 	private static Logger log;
-        static {
-            log = Logger.getLogger(LocationManager.class.getName());
-        }
-
-
-	public LocationManager(EncryptionManager encryptionManager,
-                PacketHandler packetHandler,
-                PublicKeyDirectory publicKeyDirectory) {
-            this.encryptionManager = encryptionManager;
-            this.packetHandler = packetHandler;
-            this.publicKeyDirectory = publicKeyDirectory;
-            this.connections = new HashSet<FractusConnector>();
+	static {
+		log = Logger.getLogger(LocationManager.class.getName());
 	}
-	
-	public FractusConnector[] getConnections() {
-		FractusConnector[] conArr = new FractusConnector[0];
-		connections.toArray(conArr);
-		return conArr;
+
+	public LocationManager() {
+		this.connections = new HashSet<FractusConnector>();
 	}
+
 
 	public void removeConnection(FractusConnector c) {
 		synchronized(connections) {
@@ -48,46 +36,24 @@ public class LocationManager {
 		}
 	}
 
-	public synchronized void addConnection(FractusConnector connection) {
-		if (connections.contains(connection)) {
-			return;
-		}
-		log.info("Connection added at " + connection.toString());
-		connections.add(connection);
-	}
-
 	public synchronized void addConnection(String address, int port) {
-            
 
-            //		FractusConnector connection = null;
-//		try {
-//			connection = new FractusConnector(address, port,
-//                                encryptionManager, publicKeyDirectory);
-//			Logger.getAnonymousLogger().log(Level.INFO,"location manager: addConnection: connection added at " + connection.toString());
-//			connections.add(connection);
-//		} catch(Exception e) {
-//			log.warning("location invalid: "+address+":"+port);
-//		}
 	}
 
 	public void sendPacket(FractusPacket m) {
-		
-		Iterator<FractusConnector> cItr = connections.iterator();
-		while (cItr.hasNext()) {
-			FractusConnector c = cItr.next();
-		}
 	}
 
 
 	public boolean isReachable() {
-		/* rule: need either origin or two proxies */
-		int proxiesReachable = 0;
-		Iterator<FractusConnector> cItr = connections.iterator();
-		while(cItr.hasNext()) {
-			FractusConnector c = cItr.next();
-                        // TODO: fix isAlive!!!
-			return true; //c.isAlive();
-		}
-		return proxiesReachable >= 2;
+		//		/* rule: need either origin or two proxies */
+		//		int proxiesReachable = 0;
+		//		Iterator<FractusConnector> cItr = connections.iterator();
+		//		while(cItr.hasNext()) {
+		//			FractusConnector c = cItr.next();
+		//                        // TODO: fix isAlive!!!
+		//			return true; //c.isAlive();
+		//		}
+		//		return proxiesReachable >= 2;
+		return false;
 	}
 }

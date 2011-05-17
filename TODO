@@ -1,35 +1,51 @@
 
 Todo
 ====
+Client
+------
+>Public key directory
+Establish incoming route
+Prompt for credentials
+
+
+
+Music
+-----
+Trapt - Echo
+Hoobastank - Crawling in the dark
+
 Server
 ------
-Database Unit tests
-
 Database Interface:
-	>AccountData
 		>GetAccountData
-	ContactTracker
-		AddContact
-		DeleteContact
-		FindNonreciprocalContacts
-		GetUserContactData (with locations)
-	UserTracker
-		RegisterLocation
-		DeleteLocation
-
+		>AddContact
+		>RemoveContact
+		>ListNonreciprocalContacts
+		>GetUserContactData (with locations)
+		>RegisterLocation
+		>DeleteLocation
+		>LocateUser
+		>RegisterAccount
+		>DeactivateAccount
+Network:
+	Create and agree upon protocol errors, then put them in.	
 Tests:
-	All Database
-	Strategies:
-		AddContactReqStrategy
-		CipherCapabilitiesStrategy
-		ContactDataReqStrategy
-		HandshakeDataStrategy
-		IdentifyKeyReqStrategy
-		PendingContactReqStrategy
-		RegisterKeyReqStrategy
-		RevokeKeyReqStrategy
-		UnregisterLocationStrategy
-		RegisterLocationStrategy
+	All database methods
+		-- Register account
+		-- Deactivate account
+		-- 
+Strategies:
+	>AddContactReqStrategy
+		-- Add notifier
+	>CipherCapabilitiesStrategy
+	ContactDataReqStrategy
+	>HandshakeDataStrategy
+	>IdentifyKeyReqStrategy
+	PendingContactReqStrategy
+	RegisterKeyReqStrategy
+	RevokeKeyReqStrategy
+	UnregisterLocationStrategy
+	RegisterLocationStrategy
 		
 		
 Update MessageDescriptor when needed
