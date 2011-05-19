@@ -1,9 +1,6 @@
 package fractus.net;
 
-import java.security.spec.RSAPublicKeySpec;
-
 public class UserCredentials {
-
 	public UserCredentials (String username, String password) {
 		this.username = username;
 		this.password = password;

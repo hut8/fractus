@@ -19,7 +19,7 @@ import fractus.net.ProtocolBuffer;
  * @author bowenl2
  */
 public class HandshakeDataStrategy
-implements PacketStrategy {
+implements PacketReceiveStrategy {
     private ClientCipher clientCipher;
     private FractusConnector fractusConnector;
     private boolean agreedCipherSuite;

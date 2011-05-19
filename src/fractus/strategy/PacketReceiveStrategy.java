@@ -9,6 +9,6 @@ package fractus.strategy;
  *
  * @author bowenl2
  */
-public interface PacketStrategy {
+public interface PacketReceiveStrategy {
     public void dispatch(byte[] contents);
 }

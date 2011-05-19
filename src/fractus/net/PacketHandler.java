@@ -1,6 +1,6 @@
 package fractus.net;
 
-import fractus.strategy.PacketStrategy;
+import fractus.strategy.PacketReceiveStrategy;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -10,14 +10,14 @@ import org.apache.log4j.Logger;
 
 public class PacketHandler {
     private static Logger log = Logger.getLogger(PacketHandler.class.getName());
-    private Map<MessageDescriptor, PacketStrategy> strategyMap;
+    private Map<MessageDescriptor, PacketReceiveStrategy> strategyMap;
 	
 
     public PacketHandler() {
-        strategyMap = new HashMap<MessageDescriptor, PacketStrategy>();
+        strategyMap = new HashMap<MessageDescriptor, PacketReceiveStrategy>();
     }
 
-    public synchronized void register(MessageDescriptor messageDescriptor, PacketStrategy s) {
+    public synchronized void register(MessageDescriptor messageDescriptor, PacketReceiveStrategy s) {
         log.debug("Registering descriptor strategy: " + messageDescriptor.getName() + " to: " + s.toString());
         strategyMap.put(messageDescriptor, s);
     }
@@ -49,7 +49,7 @@ public class PacketHandler {
             log.warn("There was no handler for descriptor: " + descriptor);
             return;
         }
-        PacketStrategy strategy = strategyMap.get(descriptor);
+        PacketReceiveStrategy strategy = strategyMap.get(descriptor);
 
 
         // Get rest of message contents

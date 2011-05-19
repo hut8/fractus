@@ -58,7 +58,6 @@ public class PublicKeyDirectory {
 			}
 			keyUserMap.put(remotePoint, authoritiveAnswer);
 		}
-		// It has to be here.
 		return keyUserMap.get(remotePoint);
 	}
 }

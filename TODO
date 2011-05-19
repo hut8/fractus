@@ -3,16 +3,18 @@ Todo
 ====
 Client
 ------
+Initialization Routine
+	Register key
+	Register locations
+	Retrieve Contact Info
+Contact Initialization
+	Make connections to every contact
+	
+Find the work that can be done immediately at startup
 >Public key directory
 Establish incoming route
-Prompt for credentials
-
-
-
-Music
------
-Trapt - Echo
-Hoobastank - Crawling in the dark
+>Prompt for credentials
+Proxy Support
 
 Server
 ------

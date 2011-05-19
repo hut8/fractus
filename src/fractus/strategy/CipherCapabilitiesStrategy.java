@@ -8,7 +8,7 @@ import fractus.net.FractusConnectorInitializer;
 import fractus.net.ProtocolBuffer;
 
 public class CipherCapabilitiesStrategy
-implements PacketStrategy {
+implements PacketReceiveStrategy {
 
 	private FractusConnectorInitializer initializer;
     private final static Logger log =

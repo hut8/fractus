@@ -1,5 +1,7 @@
 package fractus.main;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
@@ -21,28 +23,33 @@ import fractus.net.ServerConnector;
 import fractus.net.UserCredentials;
 
 public class Fractus {
+	private static Fractus instance;
 	private static Logger log;
 	static {
 		log = Logger.getLogger(Fractus.class.getName());
 	}
+	public static Fractus getInstance() {
+		return instance;
+	}
+	
 	private ServerConnector serverConnection;
+	private Thread serverConnectionThread;
 	private IncomingRoute incomingRoute;
 	private PublicKeyDirectory publicKeyDirectory;
 	private RoutePublisher routePublisher;
 	private Thread routePublisherThread;
 	private ContactManager contactManager;
 	private UserCredentials userCredentials;
-	private java.beans.PropertyChangeSupport propertyChangeSupport;
-	private GuiManager guiManager;
+	private PropertyChangeSupport propertyChangeSupport;
 
-	public Fractus() throws
+	private Fractus() throws
 	IOException,
 	GeneralSecurityException,
 	ParserConfigurationException {
 		log.info("Fractus Client");
-		propertyChangeSupport = new java.beans.PropertyChangeSupport(this);
-		log.debug("Creating Encryption Manager");
-		EncryptionManager.getInstance();
+		propertyChangeSupport = new PropertyChangeSupport(this);
+		log.debug("Initializing Encryption Manager");
+		EncryptionManager.getInstance().initialize();
 		log.debug("Creating Contact Manager");
 		contactManager = new ContactManager();
 		log.debug("Creating Incoming Route manager");
@@ -50,6 +57,11 @@ public class Fractus {
 		routePublisherThread = new Thread(this.routePublisher);
 		routePublisherThread.start();
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(this));
+	}
+	
+	public void initialize(String username, String password, String serverAddress, Integer port) {
+		createCredentials(username, password);
+		
 	}
 
 	public void addPropertyChangeListener(java.beans.PropertyChangeListener listener) {
@@ -70,11 +82,12 @@ public class Fractus {
 	GeneralSecurityException,
 	ParserConfigurationException {
 		PropertyConfigurator.configure("lib/log4j.properties");
-		new Fractus();
+		Fractus.instance = new Fractus();
 		GuiManager.getInstance().main();
 	}
 
 	public void shutdown() {
+		// TODO: Shutdown threads individually
 		Runtime.getRuntime().exit(0);
 	}
 
@@ -95,5 +108,10 @@ public class Fractus {
 		this.userCredentials = userCredentials;
 		propertyChangeSupport.firePropertyChange("userCredentials",
 				oldUc, userCredentials);
+	}
+
+	public void addPropertyChangeListener(String string,
+			PropertyChangeListener propertyChangeListener) {
+		this.propertyChangeSupport.addPropertyChangeListener(string, propertyChangeListener);
 	}
 }

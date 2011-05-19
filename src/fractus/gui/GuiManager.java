@@ -1,5 +1,6 @@
 package fractus.gui;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.apache.log4j.Logger;
@@ -24,6 +25,16 @@ public class GuiManager {
 	
 	private GuiManager() {
 		credentialsDialog = new CredentialsFrame();
+		mainFrame = new MainFrame();
+	}
+	
+	public void notifyUser(final String message) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(null, message);
+			}
+		});
 	}
 	
 	public void main() {
@@ -37,7 +48,8 @@ public class GuiManager {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				credentialsDialog.setVisible(true);
+				mainFrame.setVisible(true);
+				credentialsDialog.setVisible(true);				
 			}
 		});
 	}

@@ -174,14 +174,11 @@ implements Runnable {
 
 		log.debug("Dispatching to handler");
 		handler.handle(contents);	
-		
-		
-		
 	}
 
 	private void createConsumer() {
 		this.messageConsumer = new MessageConsumer();
-		this.consumerThread = new Thread();
+		this.consumerThread = new Thread(this.messageConsumer);
 		this.consumerThread.start();
 	}
 

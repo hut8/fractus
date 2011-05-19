@@ -1,8 +1,5 @@
 package fractus.gui;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
@@ -10,6 +7,10 @@ import javax.swing.JList;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import javax.swing.JMenuBar;
@@ -18,6 +19,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import fractus.main.Fractus;
+import fractus.net.UserCredentials;
+
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -41,21 +44,13 @@ public class MainFrame extends JFrame {
 	private JMenuItem exitMenuItem = null;
 	private JMenu helpMenu = null;
 	private JMenuItem aboutMenuItem = null;
-
 	private JMenu contactsMenu = null;
-
 	private JMenuItem systemStatusMenuItem = null;
-
 	private JMenuItem addContactMenuItem = null;
-
 	private JMenuItem removeContactMenuItem = null;
-
 	private JCheckBoxMenuItem showOfflineContactsMenuItem = null;
-
 	private JMenu sortContactMenu = null;
-
 	private JRadioButtonMenuItem sortAlphabeticallyMenuItem = null;
-
 	private JRadioButtonMenuItem sortStatusMenuItem = null;
 
 	/**
@@ -68,15 +63,29 @@ public class MainFrame extends JFrame {
 
 	public void setFractus(Fractus fractus) {
 		this.fractus = fractus;
+		this.fractus.addPropertyChangeListener("userCredentials",
+				new CredentialsChangeListener());
 	}
 	
+	private class CredentialsChangeListener
+	implements PropertyChangeListener {
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if (!"userCredentials".equals(evt.getPropertyName())) {
+				return;
+			}
+			MainFrame.this.setTitle("Fractus [" +
+					((UserCredentials)evt.getNewValue()).getUsername() + "]");
+		}
+	}
+
 	/**
 	 * This method initializes this
 	 * 
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(300, 200);
+		this.setSize(300, 600);
 		this.setJMenuBar(getMainMenuBar());
 		this.setContentPane(getJContentPane());
 		this.setTitle("Fractus");

@@ -44,8 +44,11 @@ implements KeyDerivationEngine {
 		log = Logger.getLogger(EncryptionManager.class.getName());
 		instance = new EncryptionManager();
 	}
-
 	private EncryptionManager() {
+
+	}
+	
+	public void initialize() {
 		try {
 			this.keyPair = generateKey();
 		} catch (GeneralSecurityException e) {
@@ -61,7 +64,7 @@ implements KeyDerivationEngine {
 		ECPrivateKeyParameters pkp = new ECPrivateKeyParameters(privKey.getD(), dp);
 		agreement.init(pkp);
 		generateCapabilityProtocolBuffer();
-		log.info("EncryptionManager constructed");
+		log.info("EncryptionManager initialized");		
 	}
 
 	private KeyPair generateKey()
