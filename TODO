@@ -1,9 +1,62 @@
+Liam Bowen - 6/19/2011
 
-Todo
+TODO
 ====
+Server
+------
+Network:
+	Create and agree upon protocol errors, then put them in.	
+Tests:
+	All database methods
+		-- Register account
+		-- Deactivate account
+Strategies:
+	>AddContactReqStrategy
+		*-- Add notifier (later)
+	>CipherCapabilitiesStrategy
+	>ContactDataReqStrategy EXCEPT individual contact data by username
+	>HandshakeDataStrategy
+	>IdentifyKeyReqStrategy
+	* PendingContactReqStrategy - Later
+	>RegisterKeyReqStrategy
+	>RevokeKeyReqStrategy
+	>RegisterLocationStrategy
+	>UnregisterLocationStrategy
+	
+>Database Interface:
+		>GetAccountData
+		>AddContact
+		>RemoveContact
+		>ListNonreciprocalContacts
+		>GetUserContactData (with locations)
+		>RegisterLocation
+		>DeleteLocation
+		>LocateUser
+		>RegisterAccount
+		>DeactivateAccount
+
+			
+Update MessageDescriptor when needed
+FractusConnectorTest
+Rename PublicKeyStrategy
+Add code to FractusConnector for disconnecting with ProtocolError code
+CipherCapabilitiesStrategy
+CipherCapabilitiesStrategyTest
+HandshakeStrategy
+HandshakeStrategyTest
+
 Client
 ------
-Initialization Routine
+CredentialsFrame
+	UN, PW, Server, Port "models"
+	Validation
+	Complete inialization routine
+	Use "Document" models
+	Remember username (never password), server, port
+
+Initialization Routine / Dialog
+	Generate key
+	==== (pause for credentials to be accepted)
 	Register key
 	Register locations
 	Retrieve Contact Info
@@ -16,49 +69,6 @@ Establish incoming route
 >Prompt for credentials
 Proxy Support
 
-Server
-------
-Database Interface:
-		>GetAccountData
-		>AddContact
-		>RemoveContact
-		>ListNonreciprocalContacts
-		>GetUserContactData (with locations)
-		>RegisterLocation
-		>DeleteLocation
-		>LocateUser
-		>RegisterAccount
-		>DeactivateAccount
-Network:
-	Create and agree upon protocol errors, then put them in.	
-Tests:
-	All database methods
-		-- Register account
-		-- Deactivate account
-		-- 
-Strategies:
-	>AddContactReqStrategy
-		-- Add notifier
-	>CipherCapabilitiesStrategy
-	ContactDataReqStrategy
-	>HandshakeDataStrategy
-	>IdentifyKeyReqStrategy
-	PendingContactReqStrategy
-	RegisterKeyReqStrategy
-	RevokeKeyReqStrategy
-	UnregisterLocationStrategy
-	RegisterLocationStrategy
-		
-		
-Update MessageDescriptor when needed
-FractusConnector
-FractusConnectorTest
-Rename PublicKeyStrategy
-Add code to FractusConnector for disconnecting with ProtocolError code
-CipherCapabilitiesStrategy
-CipherCapabilitiesStrategyTest
-HandshakeStrategy
-HandshakeStrategyTest
 
 
 Web
@@ -74,12 +84,6 @@ Link to documentation and Github
 History of logins
 Geo IP DB (later)
 Statistics: Registered users, online locations
-
-
-
-
-
-
 
 Done
 ----

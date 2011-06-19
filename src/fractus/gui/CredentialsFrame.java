@@ -19,7 +19,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CredentialsFrame extends JFrame {
+	private String username;
+	private String password;
+	private String serverAddress;
+	private Integer serverPort;
 
+	private static final int USERNAME_LENGTH = 32;
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JLabel titleLabel = null;
@@ -218,11 +223,23 @@ public class CredentialsFrame extends JFrame {
 			confirmButton.setText("Connect");
 			confirmButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					//Fractus.getInstance().initialize(username, password, serverAddress, port)
+					// Parse out port from server
+					String server = serverField.getText().contains(":") ?
+							serverField.getText().substring(0, serverField.getText().indexOf(":"))
+							: serverField.getText();
+					int port = 1337;
+					if (serverField.getText().contains(":")) {
+						port = Integer.parseInt(
+								serverField.getText().substring(
+										serverField.getText().indexOf(":")+1));
+					}
+					Fractus.getInstance().initialize(usernameField.getText(),
+							new String(passwordField.getPassword()),
+							server,
+							port);
 				}
 			});
 		}
 		return confirmButton;
 	}
-
 }
